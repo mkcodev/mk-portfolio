@@ -1,0 +1,156 @@
+---
+import type { Lang } from '../data/site';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+
+const title = lang === 'es' ? 'Atajos de teclado' : 'Keyboard shortcuts';
+const closeLabel = lang === 'es' ? 'Cerrar atajos' : 'Close shortcuts';
+
+const rows: Array<[string, string]> =
+  lang === 'es'
+    ? [
+        ['ctrl k', 'paleta de comandos'],
+        ['?', 'este panel'],
+        ['g p', 'ir a proyectos'],
+        ['g w', 'ir a cómo trabajo'],
+        ['g t', 'ir a git log'],
+        ['g a', 'ir a sobre mí'],
+        ['g c', 'ir a contacto'],
+        ['g u', 'ir a ~/uses'],
+        ['g h', 'ir al home'],
+        ['j / k', 'scroll abajo / arriba'],
+        ['esc', 'cerrar'],
+      ]
+    : [
+        ['ctrl k', 'command palette'],
+        ['?', 'this panel'],
+        ['g p', 'go to projects'],
+        ['g w', 'go to how I work'],
+        ['g t', 'go to git log'],
+        ['g a', 'go to about'],
+        ['g c', 'go to contact'],
+        ['g u', 'go to ~/uses'],
+        ['g h', 'go home'],
+        ['j / k', 'scroll down / up'],
+        ['esc', 'close'],
+      ];
+---
+
+<div class="sc-backdrop" data-shortcuts hidden>
+  <div
+    class="sc-panel glass"
+    data-shortcuts-panel
+    role="dialog"
+    aria-modal="true"
+    aria-label={title}
+  >
+    <div class="sc-head">
+      <p class="sc-title"><span class="sc-prompt">$</span> man shortcuts</p>
+      <button type="button" class="sc-close" data-shortcuts-close aria-label={closeLabel}>
+        ✕
+      </button>
+    </div>
+    <dl class="sc-list">
+      {
+        rows.map(([keys, desc]) => (
+          <div class="sc-row">
+            <dt>
+              <kbd class="sc-kbd">{keys}</kbd>
+            </dt>
+            <dd>{desc}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+</div>
+
+<style>
+  .sc-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 190;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    background: rgb(4 7 7 / 0.6);
+  }
+  .sc-backdrop[hidden] {
+    display: none;
+  }
+
+  .sc-panel {
+    width: 100%;
+    max-width: 460px;
+    border-radius: var(--radius-md);
+    padding: 1.25rem 1.5rem 1.5rem;
+    font-family: var(--font-mono);
+  }
+
+  .sc-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+  .sc-title {
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--color-text);
+  }
+  .sc-prompt {
+    color: var(--color-accent);
+  }
+  .sc-close {
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    background: transparent;
+    border: 1px solid var(--color-border-soft);
+    border-radius: var(--radius-sm);
+    color: var(--color-muted);
+    font-size: var(--text-xs);
+    cursor: pointer;
+    transition:
+      color var(--duration-hover) ease,
+      border-color var(--duration-hover) ease;
+  }
+  .sc-close:hover,
+  .sc-close:focus-visible {
+    color: var(--color-accent);
+    border-color: var(--color-accent-dark);
+  }
+
+  .sc-list {
+    margin: 0;
+    display: grid;
+    gap: 0.5rem;
+  }
+  .sc-row {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+  }
+  .sc-row dt {
+    flex: 0 0 84px;
+  }
+  .sc-row dd {
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--color-muted);
+  }
+  .sc-kbd {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-accent);
+    border: 1px solid var(--color-border-soft);
+    border-radius: var(--radius-sm);
+    padding: 0.125rem 0.5rem;
+  }
+</style>
