@@ -13,7 +13,12 @@ const lang = 'en' as const;
 const t = useTranslations(lang);
 ---
 
-<Base lang={lang} title={t('meta.home.title')} description={t('meta.home.description')}>
+<Base
+  lang={lang}
+  title={t('meta.home.title')}
+  description={t('meta.home.description')}
+  ogImage="/og/home-en.png"
+>
   <Hero lang={lang} />
 
   <Projects lang={lang} />

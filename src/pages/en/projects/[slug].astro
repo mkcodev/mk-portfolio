@@ -25,6 +25,7 @@ if (!image) throw new Error(`Missing placeholder for ${project.slug}`);
   lang={lang}
   title={`${project.title} — case study · mkcodev`}
   description={project.description[lang]}
+  ogImage={`/og/${project.slugEn}-en.png`}
 >
   <CaseStudy project={project} image={image} lang={lang} />
 </Base>

@@ -212,6 +212,33 @@ body::after {
   transform: translateY(0);
 }
 
+/* ============================================================
+   Modo CRT — easter egg Konami (↑↑↓↓←→←→ba)
+   ============================================================ */
+html.crt::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 10002;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 2px,
+    rgb(0 0 0 / 0.18) 3px,
+    transparent 4px
+  );
+  animation: crt-flicker 0.12s steps(2) infinite;
+}
+html.crt body {
+  filter: contrast(1.08) saturate(1.15);
+}
+@keyframes crt-flicker {
+  to {
+    opacity: 0.92;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
