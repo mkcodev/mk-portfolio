@@ -1,0 +1,30 @@
+---
+import Base from '../../layouts/Base.astro';
+import CaseStudy from '../../components/CaseStudy.astro';
+import { flagships } from '../../data/projects';
+
+import gekoImg from '../../assets/projects/geko-marketing.svg';
+import totalMuscleImg from '../../assets/projects/total-muscle.svg';
+
+export function getStaticPaths() {
+  return flagships.map((p) => ({ params: { slug: p.slug }, props: { project: p } }));
+}
+
+const { project } = Astro.props;
+const lang = 'es' as const;
+
+const images: Record<string, ImageMetadata> = {
+  'geko-marketing': gekoImg,
+  'total-muscle': totalMuscleImg,
+};
+const image = images[project.slug];
+if (!image) throw new Error(`Sin placeholder para ${project.slug}`);
+---
+
+<Base
+  lang={lang}
+  title={`${project.title} — case study · mkcodev`}
+  description={project.description[lang]}
+>
+  <CaseStudy project={project} image={image} lang={lang} />
+</Base>

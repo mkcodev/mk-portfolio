@@ -19,7 +19,8 @@ mkdirSync(OUT, { recursive: true });
 const browser = await chromium.launch();
 
 async function capture(width, height, suffix, actions) {
-  const page = await browser.newPage({ viewport: { width, height } });
+  // reducedMotion: los reveals GSAP se saltan y todo el contenido queda visible en fullPage
+  const page = await browser.newPage({ viewport: { width, height }, reducedMotion: 'reduce' });
   const errors = [];
   page.on('console', (msg) => {
     if (msg.type() === 'error') errors.push(msg.text());

@@ -1,0 +1,162 @@
+---
+import type { Lang } from '../../data/site';
+import { projects } from '../../data/projects';
+import { useTranslations } from '../../i18n/ui';
+import SectionHeading from '../SectionHeading.astro';
+import ProjectCard from '../ProjectCard.astro';
+
+import gekoImg from '../../assets/projects/geko-marketing.svg';
+import totalMuscleImg from '../../assets/projects/total-muscle.svg';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const images: Record<string, ImageMetadata> = {
+  'geko-marketing': gekoImg,
+  'total-muscle': totalMuscleImg,
+};
+
+const flagshipList = projects.filter((p) => p.flagship);
+const rest = projects.filter((p) => !p.flagship);
+---
+
+<section id="proyectos" class="container-site section-block">
+  <SectionHeading marker={t('section.projects')} title={lang === 'es' ? 'Proyectos' : 'Projects'} />
+
+  <div class="proj-flagships" data-reveal-group>
+    {
+      flagshipList.map((p) => {
+        const img = images[p.slug];
+        return img ? <ProjectCard project={p} image={img} lang={lang} /> : null;
+      })
+    }
+  </div>
+
+  <div class="proj-rest" data-reveal-group>
+    {
+      rest.map((p) => (
+        <a
+          class="proj-mini"
+          href={p.url ?? p.repo}
+          target="_blank"
+          rel="noopener noreferrer"
+          data-reveal
+        >
+          <div class="proj-mini-head">
+            <h3 class="proj-mini-title">{p.title}</h3>
+            <span class="proj-mini-year">{p.year}</span>
+          </div>
+          <p class="proj-mini-desc">{p.description[lang]}</p>
+          <p class="proj-mini-foot">
+            <span class="proj-mini-stack">{p.stack.join(' · ')}</span>
+            <span class="proj-mini-link">
+              {t('projects.visit')} <span aria-hidden="true">↗</span>
+            </span>
+          </p>
+        </a>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .section-block {
+    padding-block: clamp(4rem, 10vw, 7.5rem) 0;
+  }
+
+  .proj-flagships {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  @media (min-width: 768px) {
+    .proj-flagships {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .proj-rest {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  @media (min-width: 768px) {
+    .proj-rest {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .proj-mini {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1.25rem 1.5rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-soft);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    color: inherit;
+    transition:
+      transform var(--duration-hover) var(--ease-out-power3),
+      border-color var(--duration-hover) ease,
+      box-shadow var(--duration-hover) ease;
+  }
+  .proj-mini:hover,
+  .proj-mini:focus-visible {
+    transform: translateY(-4px);
+    border-color: var(--color-accent-dark);
+    box-shadow: var(--shadow-glow);
+  }
+
+  .proj-mini-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .proj-mini-title {
+    margin: 0;
+    font-size: var(--text-body);
+    font-weight: 700;
+    color: var(--color-white);
+  }
+  .proj-mini-year {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-muted);
+    white-space: nowrap;
+  }
+  .proj-mini-desc {
+    margin: 0;
+    font-size: var(--text-sm);
+    line-height: var(--text-sm--line-height);
+    color: var(--color-muted);
+  }
+  .proj-mini-foot {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    margin: 0.25rem 0 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-2xs);
+  }
+  .proj-mini-stack {
+    color: var(--color-accent-dark);
+  }
+  .proj-mini-link {
+    color: var(--color-accent);
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity var(--duration-hover) ease;
+  }
+  .proj-mini:hover .proj-mini-link,
+  .proj-mini:focus-visible .proj-mini-link {
+    opacity: 1;
+  }
+</style>

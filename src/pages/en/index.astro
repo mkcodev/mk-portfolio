@@ -1,6 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import Hero from '../../components/sections/Hero.astro';
+import Projects from '../../components/sections/Projects.astro';
 import SectionHeading from '../../components/SectionHeading.astro';
 import { useTranslations } from '../../i18n/ui';
 
@@ -11,9 +12,7 @@ const t = useTranslations(lang);
 <Base lang={lang} title={t('meta.home.title')} description={t('meta.home.description')}>
   <Hero lang={lang} />
 
-  <section id="proyectos" class="container-site section-block">
-    <SectionHeading marker={t('section.projects')} title="Projects" />
-  </section>
+  <Projects lang={lang} />
 
   <section id="como-trabajo" class="container-site section-block">
     <SectionHeading marker={t('section.how')} title="How I work" />

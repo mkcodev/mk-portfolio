@@ -1,0 +1,140 @@
+---
+import { Image } from 'astro:assets';
+import type { Project } from '../data/projects';
+import type { Lang } from '../data/site';
+import { useTranslations } from '../i18n/ui';
+
+interface Props {
+  project: Project;
+  image: ImageMetadata;
+  lang: Lang;
+}
+
+const { project, image, lang } = Astro.props;
+const t = useTranslations(lang);
+const href = lang === 'es' ? `/proyectos/${project.slug}` : `/en/projects/${project.slugEn}`;
+---
+
+<a class="proj-card" href={href} data-reveal>
+  <div class="proj-card-media" transition:name={`proj-img-${project.slug}`}>
+    <Image src={image} alt={`Screenshot — ${project.title}`} />
+  </div>
+  <div class="proj-card-body">
+    <p class="proj-card-year">{project.year}</p>
+    <h3 class="proj-card-title" transition:name={`proj-title-${project.slug}`}>
+      {project.title}
+    </h3>
+    <p class="proj-card-desc">{project.description[lang]}</p>
+    <ul class="proj-card-stack" role="list">
+      {project.stack.map((item) => <li>{item}</li>)}
+    </ul>
+    <p class="proj-card-cta">
+      <span class="proj-card-cta-bracket" aria-hidden="true">[</span>
+      {t('projects.case')}
+      <span class="proj-card-cta-bracket" aria-hidden="true">]</span>
+      <span class="proj-card-cta-arrow" aria-hidden="true">→</span>
+    </p>
+  </div>
+</a>
+
+<style>
+  .proj-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-soft);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    transition:
+      transform var(--duration-hover) var(--ease-out-power3),
+      border-color var(--duration-hover) ease,
+      box-shadow var(--duration-hover) ease;
+  }
+  .proj-card:hover,
+  .proj-card:focus-visible {
+    transform: translateY(-4px);
+    border-color: var(--color-accent-dark);
+    box-shadow: var(--shadow-glow);
+  }
+
+  .proj-card-media {
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    border-bottom: 1px solid var(--color-border-soft);
+  }
+  .proj-card-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform var(--duration-enter) var(--ease-out-power3);
+  }
+  .proj-card:hover .proj-card-media img {
+    transform: scale(1.03);
+  }
+
+  .proj-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+    padding: 1.5rem;
+  }
+  .proj-card-year {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-muted);
+  }
+  .proj-card-title {
+    margin: 0;
+    font-size: var(--text-h3);
+    font-weight: 700;
+    letter-spacing: var(--text-h3--letter-spacing, -0.01em);
+    color: var(--color-white);
+  }
+  .proj-card-desc {
+    margin: 0;
+    font-size: var(--text-sm);
+    line-height: var(--text-sm--line-height);
+    color: var(--color-muted);
+  }
+
+  .proj-card-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+    margin: 0.25rem 0 0;
+    padding: 0;
+    list-style: none;
+    opacity: 0.6;
+    transition: opacity var(--duration-hover) ease;
+  }
+  .proj-card:hover .proj-card-stack {
+    opacity: 1;
+  }
+  .proj-card-stack li {
+    font-family: var(--font-mono);
+    font-size: var(--text-2xs);
+    color: var(--color-accent);
+    border: 1px solid var(--color-border-soft);
+    border-radius: var(--radius-sm);
+    padding: 0.125rem 0.5rem;
+  }
+
+  .proj-card-cta {
+    margin: 0.5rem 0 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-accent);
+  }
+  .proj-card-cta-arrow {
+    display: inline-block;
+    margin-left: 0.375rem;
+    transition: transform var(--duration-hover) var(--ease-out-power3);
+  }
+  .proj-card:hover .proj-card-cta-arrow {
+    transform: translateX(4px);
+  }
+</style>

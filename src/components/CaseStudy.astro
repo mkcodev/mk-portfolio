@@ -1,0 +1,279 @@
+---
+import { Image } from 'astro:assets';
+import type { Project } from '../data/projects';
+import type { Lang } from '../data/site';
+import { useTranslations } from '../i18n/ui';
+
+interface Props {
+  project: Project;
+  image: ImageMetadata;
+  lang: Lang;
+}
+
+const { project, image, lang } = Astro.props;
+const t = useTranslations(lang);
+const cs = project.caseStudy;
+const backHref = lang === 'es' ? '/#proyectos' : '/en#proyectos';
+---
+
+<article class="cs container-site">
+  <a class="cs-back" href={backHref}>
+    <span aria-hidden="true">←</span>
+    {t('cs.back')}
+  </a>
+
+  <header class="cs-header">
+    <p class="section-marker">{t('cs.marker')}</p>
+    <h1 class="cs-title" transition:name={`proj-title-${project.slug}`}>{project.title}</h1>
+    <p class="cs-meta">
+      <span>{project.year}</span>
+      <span class="cs-meta-sep" aria-hidden="true">·</span>
+      <span class="cs-meta-stack">{project.stack.join(' · ')}</span>
+    </p>
+    <div class="cs-links">
+      {
+        project.url && (
+          <a
+            class="btn-terminal btn-terminal--primary"
+            href={project.url}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span class="bracket bracket-l" aria-hidden="true">
+              [
+            </span>
+            {t('projects.visit')}
+            <span class="bracket bracket-r" aria-hidden="true">
+              ]
+            </span>
+          </a>
+        )
+      }
+      {
+        project.repo && (
+          <a class="btn-terminal" href={project.repo} target="_blank" rel="noopener noreferrer">
+            <span class="bracket bracket-l" aria-hidden="true">
+              →
+            </span>
+            {t('projects.repo')}
+          </a>
+        )
+      }
+    </div>
+  </header>
+
+  <div class="cs-media" transition:name={`proj-img-${project.slug}`}>
+    <Image src={image} alt={`Screenshot — ${project.title}`} loading="eager" />
+  </div>
+
+  {
+    cs && (
+      <div class="cs-body">
+        <section class="cs-section" data-reveal-group>
+          <h2 class="cs-section-title" data-reveal>
+            {t('cs.problem')}
+          </h2>
+          <p class="cs-text" data-reveal>
+            {cs.problema[lang]}
+          </p>
+        </section>
+
+        <section class="cs-section" data-reveal-group>
+          <h2 class="cs-section-title" data-reveal>
+            {t('cs.stack')}
+          </h2>
+          <p class="cs-text" data-reveal>
+            {cs.stack[lang]}
+          </p>
+        </section>
+
+        <section class="cs-section" data-reveal-group>
+          <h2 class="cs-section-title" data-reveal>
+            {t('cs.decisions')}
+          </h2>
+          <ul class="cs-decisions" role="list">
+            {cs.decisiones.map((d) => (
+              <li class="cs-decision" data-reveal>
+                <span class="cs-decision-sign" aria-hidden="true">
+                  →
+                </span>
+                {d[lang]}
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section class="cs-section" data-reveal-group>
+          <h2 class="cs-section-title" data-reveal>
+            {t('cs.result')}
+          </h2>
+          <p class="cs-text" data-reveal>
+            {cs.resultado[lang]}
+          </p>
+        </section>
+
+        {cs.metricas.length > 0 && (
+          <section class="cs-section" data-reveal-group>
+            <h2 class="cs-section-title" data-reveal>
+              {t('cs.metrics')}
+            </h2>
+            <div class="cs-metrics">
+              {cs.metricas.map((m) => (
+                <div class="cs-metric" data-reveal>
+                  <p
+                    class="cs-metric-value"
+                    class:list={{ 'cs-metric-value--pending': m.value === '[PENDIENTE]' }}
+                  >
+                    {m.value === '[PENDIENTE]' ? '--' : m.value}
+                  </p>
+                  <p class="cs-metric-label">
+                    {m.label[lang]}
+                    {m.value === '[PENDIENTE]' && (
+                      <span class="cs-metric-pending"> · {t('cs.pending')}</span>
+                    )}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+      </div>
+    )
+  }
+</article>
+
+<style>
+  .cs {
+    padding-top: 128px;
+    padding-bottom: clamp(4rem, 8vw, 6rem);
+  }
+
+  .cs-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-muted);
+    text-decoration: none;
+    transition: color var(--duration-hover) ease;
+  }
+  .cs-back:hover,
+  .cs-back:focus-visible {
+    color: var(--color-accent);
+  }
+
+  .cs-header {
+    margin-top: 2rem;
+  }
+  .cs-title {
+    margin: 0.75rem 0 0;
+    font-size: var(--text-h2);
+    font-weight: 700;
+    letter-spacing: var(--text-h2--letter-spacing);
+    line-height: var(--text-h2--line-height);
+    color: var(--color-white);
+  }
+  .cs-meta {
+    margin: 1rem 0 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-muted);
+  }
+  .cs-meta-sep {
+    margin-inline: 0.5rem;
+  }
+  .cs-meta-stack {
+    color: var(--color-accent-dark);
+  }
+  .cs-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+
+  .cs-media {
+    margin-top: 2.5rem;
+    border: 1px solid var(--color-border-soft);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .cs-media img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .cs-body {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(2.5rem, 5vw, 4rem);
+    margin-top: clamp(2.5rem, 5vw, 4rem);
+    max-width: 680px;
+  }
+  .cs-section-title {
+    margin: 0 0 1rem;
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    font-weight: 400;
+    color: var(--color-accent);
+    letter-spacing: 0.02em;
+  }
+  .cs-text {
+    margin: 0;
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    color: var(--color-text);
+  }
+
+  .cs-decisions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .cs-decision {
+    display: flex;
+    gap: 0.75rem;
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    color: var(--color-text);
+  }
+  .cs-decision-sign {
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+  }
+
+  .cs-metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+  .cs-metric {
+    padding: 1.25rem 1.5rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-soft);
+    border-radius: var(--radius-md);
+  }
+  .cs-metric-value {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-h2);
+    font-weight: 700;
+    color: var(--color-accent);
+  }
+  .cs-metric-value--pending {
+    color: var(--color-muted);
+  }
+  .cs-metric-label {
+    margin: 0.375rem 0 0;
+    font-size: var(--text-xs);
+    color: var(--color-muted);
+  }
+  .cs-metric-pending {
+    color: var(--color-accent-dark);
+  }
+</style>
