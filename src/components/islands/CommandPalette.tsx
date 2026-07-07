@@ -81,26 +81,19 @@ function buildCommands(lang: Lang, onCopy: () => void): Cmd[] {
   const caseStudies = projects.filter((p) => p.caseStudy);
 
   return [
-    ...sections.map(
-      ([id, label, kbd]): Cmd => ({
-        id: `nav-${id}`,
-        group: s.nav,
-        label,
-        kbd,
-        run: () => goTo(`${home}#${id}`, home),
-      }),
-    ),
-    ...caseStudies.map(
-      (p): Cmd => ({
-        id: `page-${p.slug}`,
-        group: s.pages,
-        label: `${p.title} — case study`,
-        run: () =>
-          void navigate(
-            lang === 'es' ? `/proyectos/${p.slug}` : `/en/projects/${p.slugEn}`,
-          ),
-      }),
-    ),
+    ...sections.map(([id, label, kbd]): Cmd => ({
+      id: `nav-${id}`,
+      group: s.nav,
+      label,
+      kbd,
+      run: () => goTo(`${home}#${id}`, home),
+    })),
+    ...caseStudies.map((p): Cmd => ({
+      id: `page-${p.slug}`,
+      group: s.pages,
+      label: `${p.title} — case study`,
+      run: () => void navigate(lang === 'es' ? `/proyectos/${p.slug}` : `/en/projects/${p.slugEn}`),
+    })),
     {
       id: 'page-uses',
       group: s.pages,

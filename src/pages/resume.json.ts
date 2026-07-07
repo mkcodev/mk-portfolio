@@ -7,8 +7,7 @@ import { timeline } from '../data/timeline';
 // Formato JSON Resume — https://jsonresume.org/schema
 export const GET: APIRoute = () => {
   const resume = {
-    $schema:
-      'https://raw.githubusercontent.com/jsonresume/resume-schema/v1.0.0/schema.json',
+    $schema: 'https://raw.githubusercontent.com/jsonresume/resume-schema/v1.0.0/schema.json',
     basics: {
       name: SITE.author,
       label: SITE.role.es,
