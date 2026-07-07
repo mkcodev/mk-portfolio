@@ -17,9 +17,22 @@
 - [ ] Screenshots reales de los 6 proyectos (sustituir placeholders 1440×900).
 - [ ] Hardware en `/uses` (campo `[PENDIENTE]` en `src/data/uses.ts`).
 - [ ] Primeros posts del blog (scaffold + RSS ya existen, sin link en navbar).
+      Al publicar: quitar `noIndex` de `/blog` y `/en/blog`, crear página de post y añadir link.
 - [ ] Testimonios de clientes.
 
 ## Mejoras
 
 - [ ] Light theme (dark only en v1).
 - [ ] Vercel Analytics / Speed Insights.
+
+## Performance mobile (gap conocido, medido en auditoría v1)
+
+Lighthouse v1: **mobile 61 · desktop 85** en perf (resto 100/100/100 en ambos; CLS 0, LCP desktop 0.6s).
+
+- El TBT mobile (~2s bajo throttle simulado 4x) es **layout/text-shaping del DOM SSR completo**, no JS:
+  el grafo de módulos ya se difiere a idle, los inits hacen yield entre tareas y los recursos son
+  mínimos (CSS 13 KB, JS ~130 KB). Probado y descartado: `content-visibility: auto` (empeora).
+- [ ] El boot overlay cuesta ~8 pts en desktop (85 → 93 sin él, mobile igual). Decidir si en una
+      iteración se acorta más o se elimina (hoy es decisión de diseño aprobada).
+- [ ] Reducir el DOM inicial del home (p. ej. diferir secciones bajo el fold a islands/fragmentos)
+      si se quiere perseguir ≥90 mobile.

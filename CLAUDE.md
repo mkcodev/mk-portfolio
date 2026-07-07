@@ -16,7 +16,9 @@ Portfolio de Mikel Salvador García (mkcodev). Astro 7 + TS strict + Tailwind v4
 
 `src/scripts/lifecycle.ts`. ClientRouter hace swap del DOM en cada navegación:
 
-- Cada módulo global se registra con `onPageLoad(init)` en `src/scripts/app.ts`; `init` devuelve su cleanup.
+- `src/scripts/app.ts` es solo un loader: en `requestIdleCallback` (timeout 1.5s) importa dinámicamente `src/scripts/modules.ts`, que registra todos los módulos con `onPageLoad(init)` y llama `startLifecycle()`. Así el grafo GSAP/Lenis no compite con el LCP.
+- `startLifecycle()` compensa el `astro:page-load` inicial ya perdido (si `readyState !== 'loading'`, ejecuta los inits directamente).
+- Los inits corren secuencialmente con yield (`setTimeout 0`) entre cada uno para no crear long tasks; un `runToken` los cancela si llega un swap a mitad.
 - `astro:page-load` → re-init de todos los módulos. `astro:before-swap` → cleanup (Lenis destroy, `ScrollTrigger.getAll().forEach(kill)`, listeners).
 - Scripts de componente (`<script>` en .astro) corren UNA vez por bundle: usar **delegación a nivel de document** (ver Navbar.astro) o registrar vía `onPageLoad`.
 - Scroll programático: `scrollToTarget()` de `src/scripts/scroll.ts` (Lenis), nunca `window.scrollTo`.
@@ -43,12 +45,17 @@ Tokens GSAP: entradas `power3.out 0.6–0.9s` · salidas `power2.in 0.4s` · hov
 
 1. **Astro 7** (no 5 como decía el brief): última estable, mismas APIs necesarias (ClientRouter, astro:assets, i18n). create-astro la instaló por defecto.
 2. **Bento vanilla GSAP** (no React): sin estado; más ligero.
-3. **Fuentes**: `font-display: swap` (default fontsource) + fallbacks con métricas ajustadas (`size-adjust`/`ascent-override` en tokens.css) → protege LCP, marca y CLS a la vez. Preload de los 2 woff2 latin en Base.astro.
-4. **OG images**: astro-og-canvas (build time).
+3. **Fuentes**: `font-display: swap` (default fontsource) + fallbacks con métricas ajustadas (`size-adjust`/`ascent-override` en tokens.css, calibradas empíricamente con canvas TextMetrics → CLS 0). Preload de 3 woff2 en Base.astro: los 2 latin + `jbm-symbols`.
+4. **OG images**: astro-og-canvas (build time) en `src/pages/og/[...slug].ts`. `canvaskit-wasm` debe ser dependencia directa (quirk de pnpm; sin ella el build falla con `__dirname is not defined`). Al añadir página nueva: añadir su entrada en `pages` del endpoint y pasar `ogImage` a Base.
 5. **Grain**: SVG feTurbulence data-URI en `body::after`, opacity .03.
 6. **i18n**: ES default sin prefijo, EN en `/en`. **Mapa de rutas explícito** en `src/i18n/routes.ts` — al añadir página, añadir su par ES↔EN ahí. Toggle SIEMPRE a la página equivalente. `trailingSlash: 'never'`.
 7. **foto es .png** (brief decía .jpg) — astro:assets la sirve AVIF igualmente.
 8. **Dominio centralizado**: `SITE_URL` en `src/data/site.ts` — cambio de dominio = 1 línea.
+9. **Overlays vanilla + atajos**: `keys.ts` ignora teclas cuando el foco está dentro de `[role="dialog"]` (isEditable). Por eso al cerrar un overlay hay que liberar el foco (`blur`) y el Escape del overlay se evalúa ANTES de isEditable — si no, el foco en el botón de cierre secuestra el teclado.
+10. **console.log**: prohibido salvo el banner easter egg de `src/scripts/eggs.ts` (excepción documentada).
+11. **Subset de símbolos** `public/fonts/jbm-symbols.woff2` (8 KB): glifos box-drawing/bloques/flechas/checks del ASCII art, ausentes de los subsets latin de fontsource. Cara `unicode-range` en tokens.css. Regenerar con `scripts/subset-symbols.mjs` (instrucciones en su cabecera) si el ASCII art usa rangos nuevos.
+12. **GSAP en scripts de componente**: import dinámico (`await import('gsap')`) dentro del handler, no import estático — evita meter GSAP en el bundle inicial de la página (ver Navbar.astro).
+13. **Lighthouse local es ruidoso**: en esta máquina, runs individuales dan falsos negativos (CLS/robots flaky, layout ±40%). Medir siempre 2-3 runs y quedarse con la mediana. Techo medido v1: mobile 61 / desktop 85 (93 sin boot overlay) — TBT mobile está dominado por layout/shaping del DOM SSR bajo throttle 4x, no por JS. `content-visibility: auto` probado y descartado (empeoró layout).
 
 ## Entorno (Windows)
 
