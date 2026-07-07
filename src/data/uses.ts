@@ -97,10 +97,7 @@ export const uses: UsesCategory[] = [
   {
     id: 'design',
     title: { es: 'Diseño', en: 'Design' },
-    items: [
-      { name: 'Figma' },
-      { name: 'Photoshop · Illustrator · After Effects' },
-    ],
+    items: [{ name: 'Figma' }, { name: 'Photoshop · Illustrator · After Effects' }],
   },
   {
     id: 'hardware',

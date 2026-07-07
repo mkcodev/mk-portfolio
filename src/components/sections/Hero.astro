@@ -1,48 +1,147 @@
 ---
 import { SITE, type Lang } from '../../data/site';
-import { useTranslations } from '../../i18n/ui';
+import Terminal from '../islands/Terminal';
 
 interface Props {
   lang: Lang;
 }
 
 const { lang } = Astro.props;
-const t = useTranslations(lang);
 const home = lang === 'es' ? '/' : '/en';
 ---
+
+<div class="boot" data-boot hidden>
+  <p class="boot-line">
+    <span class="boot-sign" aria-hidden="true">&gt;</span>
+    <span data-boot-text></span><span class="boot-caret" aria-hidden="true"></span>
+  </p>
+</div>
+<script is:inline data-astro-rerun>
+  // Pre-paint: mostrar el boot solo en la primera visita de la sesión.
+  (function () {
+    try {
+      if (sessionStorage.getItem('booted')) return;
+      var el = document.querySelector('[data-boot]');
+      if (el) el.hidden = false;
+    } catch (e) {
+      /* sessionStorage bloqueado → sin boot */
+    }
+  })();
+</script>
 
 <section class="hero blueprint" data-hero>
   <div class="hero-glow" data-hero-glow aria-hidden="true"></div>
   <div class="container-site hero-inner">
-    <p class="hero-prompt">
-      <span class="hero-prompt-user">mkcodev@arch</span>
-      <span class="hero-prompt-path">~</span>
-      <span class="hero-prompt-sign">&gt;</span> whoami
-    </p>
-    <h1 class="hero-title">{SITE.author}</h1>
-    <p class="hero-role">{SITE.role[lang]}</p>
-    <p class="hero-tagline">{SITE.tagline[lang]}</p>
-    <div class="hero-ctas">
-      <a class="btn-terminal btn-terminal--primary" href={`${home}#proyectos`}>
-        <span class="bracket bracket-l" aria-hidden="true">[</span>
-        {lang === 'es' ? 'ver_proyectos' : 'view_projects'}
-        <span class="bracket bracket-r" aria-hidden="true">]</span>
-      </a>
-      <a class="btn-terminal" href={`${home}#contacto`}>
-        <span class="bracket bracket-l" aria-hidden="true">→</span>
-        {lang === 'es' ? './contactar' : './contact'}
-      </a>
+    <div class="hero-copy">
+      <p class="hero-prompt">
+        <span class="hero-prompt-user">mkcodev@arch</span>
+        <span class="hero-prompt-path">~</span>
+        <span class="hero-prompt-sign">&gt;</span> whoami
+      </p>
+      <h1 class="hero-title">{SITE.author}</h1>
+      <p class="hero-role">{SITE.role[lang]}</p>
+      <p class="hero-tagline">{SITE.tagline[lang]}</p>
+      <div class="hero-ctas">
+        <a class="btn-terminal btn-terminal--primary" href={`${home}#proyectos`}>
+          <span class="bracket bracket-l" aria-hidden="true">[</span>
+          {lang === 'es' ? 'ver_proyectos' : 'view_projects'}
+          <span class="bracket bracket-r" aria-hidden="true">]</span>
+        </a>
+        <a class="btn-terminal" href={`${home}#contacto`}>
+          <span class="bracket bracket-l" aria-hidden="true">→</span>
+          {lang === 'es' ? './contactar' : './contact'}
+        </a>
+      </div>
+    </div>
+    <div class="hero-term">
+      <Terminal client:idle lang={lang} />
     </div>
   </div>
 </section>
 
+<script>
+  import { prefersReducedMotion } from '../../scripts/lifecycle';
+
+  const BOOT_TEXT = 'init mkcodev v1.0 ... ok';
+  const CHAR_MS = 24;
+
+  async function runBoot(overlay: HTMLElement): Promise<void> {
+    const textEl = overlay.querySelector<HTMLElement>('[data-boot-text]');
+    try {
+      sessionStorage.setItem('booted', '1');
+    } catch {
+      /* sin storage: el boot simplemente se repetirá */
+    }
+    if (textEl && !prefersReducedMotion()) {
+      for (let i = 1; i <= BOOT_TEXT.length; i++) {
+        textEl.textContent = BOOT_TEXT.slice(0, i);
+        await new Promise((r) => setTimeout(r, CHAR_MS));
+      }
+      await new Promise((r) => setTimeout(r, 220));
+    }
+    overlay.classList.add('boot--done');
+    setTimeout(() => {
+      overlay.hidden = true;
+    }, 350);
+  }
+
+  const overlay = document.querySelector<HTMLElement>('[data-boot]');
+  if (overlay && !overlay.hidden) runBoot(overlay);
+</script>
+
 <style>
+  /* Boot-line: overlay primera visita — nunca bloquea el LCP (el hero pinta debajo) */
+  .boot {
+    position: fixed;
+    inset: 0;
+    z-index: 10000; /* por encima del grain (9999) */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-bg);
+    transition: opacity 300ms var(--ease-in-power2);
+  }
+  .boot--done {
+    opacity: 0;
+    pointer-events: none;
+  }
+  .boot-line {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-text);
+  }
+  .boot-sign {
+    color: var(--color-accent);
+    margin-right: 0.5em;
+  }
+  .boot-caret {
+    display: inline-block;
+    width: 0.55em;
+    height: 1.05em;
+    margin-left: 3px;
+    vertical-align: text-bottom;
+    background: var(--color-accent);
+    animation: boot-blink 0.9s steps(1) infinite;
+  }
+  @keyframes boot-blink {
+    50% {
+      opacity: 0;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .boot-caret {
+      animation: none;
+    }
+  }
+
   .hero {
     position: relative;
     min-height: 92dvh;
     display: flex;
     align-items: center;
     padding-top: 96px;
+    padding-bottom: 3rem;
     overflow: hidden;
   }
   .hero-glow {
@@ -60,6 +159,16 @@ const home = lang === 'es' ? '/' : '/en';
   .hero-inner {
     position: relative;
     width: 100%;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 3rem;
+    align-items: center;
+  }
+  @media (min-width: 1024px) {
+    .hero-inner {
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 480px);
+      gap: 4rem;
+    }
   }
   .hero-prompt {
     margin: 0 0 1.25rem;

@@ -8,7 +8,9 @@ import { mkdirSync } from 'node:fs';
 const BASE = process.env.BASE_URL ?? 'http://localhost:4321';
 // Git Bash convierte "/ruta" en ruta de Windows: aceptar también "ruta" sin barra
 const rawRoute = process.argv[2] ?? '/';
-const route = rawRoute.includes(':/') ? '/' : `/${rawRoute.replace(/^\/+/, '')}`.replace(/\/$/, '') || '/';
+const route = rawRoute.includes(':/')
+  ? '/'
+  : `/${rawRoute.replace(/^\/+/, '')}`.replace(/\/$/, '') || '/';
 const name = process.argv[3] ?? 'home';
 const OUT = 'shots';
 

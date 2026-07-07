@@ -36,7 +36,9 @@ const targets = [
       await page.waitForTimeout(2500);
       await page.screenshot({ path: 'refs/supabase-hero.png' });
       // buscar el grid de features y capturar celda normal + hover
-      const cell = page.locator('main a[href*="database"], main [class*="feature" i], main [class*="card" i]').first();
+      const cell = page
+        .locator('main a[href*="database"], main [class*="feature" i], main [class*="card" i]')
+        .first();
       if (await cell.isVisible({ timeout: 3000 }).catch(() => false)) {
         await cell.scrollIntoViewIfNeeded();
         await page.waitForTimeout(1200);

@@ -22,9 +22,7 @@ export function onPageLoad(init: InitFn): void {
 }
 
 function runInits(): void {
-  cleanups = inits
-    .map((init) => init())
-    .filter((c): c is CleanupFn => typeof c === 'function');
+  cleanups = inits.map((init) => init()).filter((c): c is CleanupFn => typeof c === 'function');
 }
 
 function runCleanups(): void {

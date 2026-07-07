@@ -65,7 +65,10 @@ export const projects: Project[] = [
         en: 'Site in production driving the agency’s client acquisition, with an active blog and a working payment flow.',
       },
       metricas: [
-        { label: { es: 'Lighthouse Performance', en: 'Lighthouse Performance' }, value: '[PENDIENTE]' },
+        {
+          label: { es: 'Lighthouse Performance', en: 'Lighthouse Performance' },
+          value: '[PENDIENTE]',
+        },
         { label: { es: 'Lighthouse SEO', en: 'Lighthouse SEO' }, value: '[PENDIENTE]' },
       ],
     },
