@@ -1,4 +1,5 @@
 ---
+import { execSync } from 'node:child_process';
 import { SITE, type Lang } from '../data/site';
 import { useTranslations } from '../i18n/ui';
 
@@ -9,6 +10,14 @@ interface Props {
 const { lang } = Astro.props;
 const t = useTranslations(lang);
 const year = new Date().getFullYear();
+
+// Último commit real en build time; sin .git (deploy CLI) se omite
+let lastCommit = '';
+try {
+  lastCommit = execSync('git log -1 --format=%h', { encoding: 'utf8' }).trim();
+} catch {
+  lastCommit = '';
+}
 ---
 
 <footer class="footer">
@@ -28,7 +37,11 @@ const year = new Date().getFullYear();
     </ul>
 
     <div class="footer-col footer-col--right">
-      <p class="footer-meta" data-footer-build>{t('footer.builtWith')}</p>
+      <p class="footer-meta" data-footer-build>
+        {t('footer.builtWith')}{lastCommit && ` · ${t('footer.lastCommit')} `}{
+          lastCommit && <span class="footer-commit">{lastCommit}</span>
+        }
+      </p>
       <p class="footer-hint">{t('footer.hint')}</p>
     </div>
   </div>
@@ -102,6 +115,9 @@ const year = new Date().getFullYear();
     .footer-col--right {
       text-align: right;
     }
+  }
+  .footer-commit {
+    color: var(--color-accent-dark);
   }
   .footer-hint {
     margin: 0.25rem 0 0;

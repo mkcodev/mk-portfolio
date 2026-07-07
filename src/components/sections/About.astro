@@ -1,0 +1,140 @@
+---
+import { Image } from 'astro:assets';
+import SectionHeading from '../SectionHeading.astro';
+import { useTranslations } from '../../i18n/ui';
+import type { Lang } from '../../data/site';
+import photo from '../../assets/photo-mikel.png';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const paragraphs: Record<Lang, string[]> = {
+  es: [
+    'Empecé en 2019 montando tiendas Shopify y posicionando webs con SEO técnico. De ahí al diseño — Figma, Adobe — y del diseño al código: hoy construyo productos web completos con React, Next.js y Astro.',
+    'Trabajo en terminal: Arch, Hyprland, Neovim y fish. Me importan los detalles que no se ven — accesibilidad, Core Web Vitals, una historia de git limpia — porque son los que hacen que lo que sí se ve funcione.',
+  ],
+  en: [
+    'I started in 2019 building Shopify stores and ranking sites with technical SEO. From there to design — Figma, Adobe — and from design to code: today I build complete web products with React, Next.js and Astro.',
+    'I work in the terminal: Arch, Hyprland, Neovim and fish. I care about the details you don’t see — accessibility, Core Web Vitals, a clean git history — because they make the visible part work.',
+  ],
+};
+
+const status =
+  lang === 'es'
+    ? 'open_to_work — Bilbao · remoto/híbrido'
+    : 'open_to_work — Bilbao · remote/hybrid';
+---
+
+<section id="sobre-mi" class="container-site section-block">
+  <SectionHeading marker={t('section.about')} title={lang === 'es' ? 'Sobre mí' : 'About'} />
+
+  <div class="about-grid" data-reveal-group>
+    <div class="about-text" data-reveal>
+      {paragraphs[lang].map((p) => <p class="about-p">{p}</p>)}
+      <p class="about-status">
+        <span class="about-status-dot" aria-hidden="true"></span>
+        {status}
+      </p>
+    </div>
+
+    <figure class="about-photo" data-ascii data-reveal>
+      <Image
+        src={photo}
+        alt={lang === 'es' ? 'Mikel Salvador García, retrato' : 'Mikel Salvador García, portrait'}
+        width={720}
+        densities={[1, 2]}
+      />
+      <canvas class="about-canvas" aria-hidden="true"></canvas>
+      <figcaption class="about-caption" aria-hidden="true">
+        {lang === 'es' ? '// hover → ascii' : '// hover → ascii'}
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<style>
+  .section-block {
+    padding-block: clamp(4rem, 10vw, 7.5rem) 0;
+  }
+
+  .about-grid {
+    display: grid;
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: center;
+  }
+  @media (min-width: 900px) {
+    .about-grid {
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 420px);
+    }
+  }
+
+  .about-p {
+    margin: 0 0 1.25rem;
+    max-width: 680px;
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    color: var(--color-text);
+  }
+  .about-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0.5rem 0 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-accent);
+  }
+  .about-status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    box-shadow: var(--shadow-glow);
+  }
+
+  .about-photo {
+    position: relative;
+    margin: 0;
+    border: 1px solid var(--color-border-soft);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    overflow: hidden;
+  }
+  .about-photo img {
+    display: block;
+    width: 100%;
+    height: auto;
+    transition: opacity var(--duration-exit) ease;
+  }
+  .about-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity var(--duration-exit) ease;
+    pointer-events: none;
+  }
+  .about-photo.ascii-ready:hover img {
+    opacity: 0.06;
+  }
+  .about-photo.ascii-ready:hover .about-canvas {
+    opacity: 1;
+  }
+  .about-caption {
+    position: absolute;
+    bottom: 0.625rem;
+    right: 0.875rem;
+    font-family: var(--font-mono);
+    font-size: var(--text-2xs);
+    color: var(--color-muted);
+    opacity: 0;
+    transition: opacity var(--duration-hover) ease;
+  }
+  .about-photo.ascii-ready .about-caption {
+    opacity: 1;
+  }
+</style>
