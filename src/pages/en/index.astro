@@ -2,6 +2,7 @@
 import Base from '../../layouts/Base.astro';
 import Hero from '../../components/sections/Hero.astro';
 import Projects from '../../components/sections/Projects.astro';
+import Bento from '../../components/sections/Bento.astro';
 import SectionHeading from '../../components/SectionHeading.astro';
 import { useTranslations } from '../../i18n/ui';
 
@@ -14,9 +15,7 @@ const t = useTranslations(lang);
 
   <Projects lang={lang} />
 
-  <section id="como-trabajo" class="container-site section-block">
-    <SectionHeading marker={t('section.how')} title="How I work" />
-  </section>
+  <Bento lang={lang} />
 
   <section id="trayectoria" class="container-site section-block">
     <SectionHeading marker={t('section.timeline')} title="Timeline" />

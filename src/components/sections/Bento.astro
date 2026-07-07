@@ -1,0 +1,486 @@
+---
+import SectionHeading from '../SectionHeading.astro';
+import { useTranslations } from '../../i18n/ui';
+import type { Lang } from '../../data/site';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+type L = Record<Lang, string>;
+interface Cell {
+  marker: string;
+  title: L;
+  desc: L;
+}
+
+const cells: Record<'terminal' | 'gauge' | 'keys' | 'git' | 'dotfiles' | 'claude', Cell> = {
+  terminal: {
+    marker: '~/flow',
+    title: { es: 'CLI-first', en: 'CLI-first' },
+    desc: {
+      es: 'Si algo se repite dos veces, se scriptea: terminal, aliases y automatización.',
+      en: 'If something repeats twice, it gets scripted: terminal, aliases and automation.',
+    },
+  },
+  gauge: {
+    marker: 'lighthouse',
+    title: { es: 'Performance por defecto', en: 'Performance by default' },
+    desc: {
+      es: 'Core Web Vitals en verde como requisito, no como optimización final.',
+      en: 'Green Core Web Vitals as a requirement, not an afterthought.',
+    },
+  },
+  keys: {
+    marker: 'motions',
+    title: { es: 'Keyboard-driven', en: 'Keyboard-driven' },
+    desc: {
+      es: 'vim motions en el editor y en esta web. Prueba a pulsar j k h l.',
+      en: 'vim motions in the editor and on this site. Try pressing j k h l.',
+    },
+  },
+  git: {
+    marker: 'git log',
+    title: { es: 'Commits atómicos', en: 'Atomic commits' },
+    desc: {
+      es: 'Historia limpia: conventional commits, ramas cortas y PRs revisables.',
+      en: 'Clean history: conventional commits, short-lived branches, reviewable PRs.',
+    },
+  },
+  dotfiles: {
+    marker: '~/.config',
+    title: { es: 'Entorno reproducible', en: 'Reproducible environment' },
+    desc: {
+      es: 'Arch + dotfiles versionados: mi setup se clona con un comando.',
+      en: 'Arch + versioned dotfiles: my setup clones with one command.',
+    },
+  },
+  claude: {
+    marker: 'ai pair',
+    title: { es: 'AI-augmented', en: 'AI-augmented' },
+    desc: {
+      es: 'Claude Code como pair programmer; el criterio sigue siendo humano.',
+      en: 'Claude Code as pair programmer; judgment stays human.',
+    },
+  },
+};
+
+const claudeUser: L = {
+  es: '> extrae esto a un hook tipado',
+  en: '> extract this into a typed hook',
+};
+const claudeReply: L = {
+  es: 'Hecho: useScrollState() con cleanup del listener y retorno tipado. El componente queda puro.',
+  en: 'Done: useScrollState() with listener cleanup and a typed return. The component stays pure.',
+};
+
+const dotfileLines = [
+  '# ~/.config/fish/config.fish',
+  "alias v 'nvim'",
+  "alias gs 'git status -sb'",
+  'set -gx EDITOR nvim',
+  '',
+  '# ~/.config/hypr/hyprland.conf',
+  'bind = SUPER, RETURN, exec, kitty',
+  'bind = SUPER, D, exec, wofi',
+  'animation = windows, 1, 3, ease',
+  '',
+  '# ~/.gitconfig',
+  '[commit] gpgsign = true',
+  '[rebase] autosquash = true',
+  '',
+].join('\n');
+---
+
+<section id="como-trabajo" class="container-site section-block">
+  <SectionHeading marker={t('section.how')} title={lang === 'es' ? 'Cómo trabajo' : 'How I work'} />
+
+  <div class="bento-grid" data-bento>
+    <!-- 1 · Terminal loop -->
+    <article class="bento-cell glass cell--terminal" data-bento-cell data-demo="terminal">
+      <div class="bento-demo bdemo-term" aria-hidden="true">
+        <div class="bdemo-term-out" data-term-out>
+          <div><span class="bt-prompt">$ </span><span>pnpm build</span></div>
+          <div class="bt-out">✓ 24 pages · 1.4s</div>
+          <div><span class="bt-prompt">$ </span><span>vercel --prod</span></div>
+          <div class="bt-out">✓ mkcodev.vercel.app</div>
+        </div>
+      </div>
+      <p class="bento-marker">{cells.terminal.marker}</p>
+      <h3 class="bento-title">{cells.terminal.title[lang]}</h3>
+      <p class="bento-desc">{cells.terminal.desc[lang]}</p>
+    </article>
+
+    <!-- 2 · Gauge Lighthouse -->
+    <article class="bento-cell glass" data-bento-cell data-demo="gauge">
+      <div class="bento-demo bdemo-gauge" aria-hidden="true">
+        <div class="bdemo-gauge-wrap">
+          <svg viewBox="0 0 120 120" class="bdemo-gauge-svg">
+            <circle cx="60" cy="60" r="50" class="bg-arc" pathLength="100"></circle>
+            <circle
+              cx="60"
+              cy="60"
+              r="50"
+              class="fg-arc"
+              pathLength="100"
+              stroke-dasharray="100"
+              stroke-dashoffset="0"
+              transform="rotate(-90 60 60)"
+              data-gauge-arc></circle>
+          </svg>
+          <div class="bdemo-gauge-num">
+            <span data-gauge-num>100</span>
+            <small>perf</small>
+          </div>
+        </div>
+      </div>
+      <p class="bento-marker">{cells.gauge.marker}</p>
+      <h3 class="bento-title">{cells.gauge.title[lang]}</h3>
+      <p class="bento-desc">{cells.gauge.desc[lang]}</p>
+    </article>
+
+    <!-- 3 · Keycaps hjkl -->
+    <article class="bento-cell glass" data-bento-cell data-demo="keys">
+      <div class="bento-demo bdemo-keys" aria-hidden="true">
+        <div class="bdemo-keys-row">
+          <kbd class="bkey" data-key="h">h</kbd>
+          <kbd class="bkey" data-key="j">j</kbd>
+          <kbd class="bkey" data-key="k">k</kbd>
+          <kbd class="bkey" data-key="l">l</kbd>
+        </div>
+      </div>
+      <p class="bento-marker">{cells.keys.marker}</p>
+      <h3 class="bento-title">{cells.keys.title[lang]}</h3>
+      <p class="bento-desc">{cells.keys.desc[lang]}</p>
+    </article>
+
+    <!-- 4 · Git graph -->
+    <article class="bento-cell glass" data-bento-cell data-demo="git">
+      <div class="bento-demo bdemo-git" aria-hidden="true">
+        <svg viewBox="0 0 220 120" class="bdemo-git-svg">
+          <path d="M16,84 H204" class="git-main" pathLength="1" stroke-dasharray="1" data-git-path
+          ></path>
+          <path
+            d="M56,84 C76,84 76,36 96,36 H140 C160,36 160,84 180,84"
+            class="git-branch"
+            pathLength="1"
+            stroke-dasharray="1"
+            data-git-path></path>
+          <circle cx="16" cy="84" r="5" class="git-dot" data-git-dot></circle>
+          <circle cx="56" cy="84" r="5" class="git-dot" data-git-dot></circle>
+          <circle cx="96" cy="36" r="5" class="git-dot git-dot--branch" data-git-dot></circle>
+          <circle cx="140" cy="36" r="5" class="git-dot git-dot--branch" data-git-dot></circle>
+          <circle cx="180" cy="84" r="5" class="git-dot" data-git-dot></circle>
+          <circle cx="204" cy="84" r="5" class="git-dot git-dot--head" data-git-dot></circle>
+          <text x="16" y="106" class="git-label" data-git-label>main</text>
+          <text x="96" y="22" class="git-label git-label--branch" data-git-label>feat/ui</text>
+          <text x="204" y="106" class="git-label git-label--head" text-anchor="end" data-git-label
+            >HEAD</text
+          >
+        </svg>
+      </div>
+      <p class="bento-marker">{cells.git.marker}</p>
+      <h3 class="bento-title">{cells.git.title[lang]}</h3>
+      <p class="bento-desc">{cells.git.desc[lang]}</p>
+    </article>
+
+    <!-- 5 · Dotfiles scroll -->
+    <article class="bento-cell glass" data-bento-cell data-demo="dotfiles">
+      <div class="bento-demo bdemo-dots" aria-hidden="true">
+        <pre class="bdemo-dots-inner" data-dotfiles>{dotfileLines + '\n' + dotfileLines}</pre>
+      </div>
+      <p class="bento-marker">{cells.dotfiles.marker}</p>
+      <h3 class="bento-title">{cells.dotfiles.title[lang]}</h3>
+      <p class="bento-desc">{cells.dotfiles.desc[lang]}</p>
+    </article>
+
+    <!-- 6 · Claude streaming -->
+    <article class="bento-cell glass" data-bento-cell data-demo="claude">
+      <div class="bento-demo bdemo-claude" aria-hidden="true">
+        <p class="bc-user">{claudeUser[lang]}</p>
+        <p class="bc-reply" data-claude-out data-claude-reply={claudeReply[lang]}>
+          {claudeReply[lang]}
+        </p>
+      </div>
+      <p class="bento-marker">{cells.claude.marker}</p>
+      <h3 class="bento-title">{cells.claude.title[lang]}</h3>
+      <p class="bento-desc">{cells.claude.desc[lang]}</p>
+    </article>
+  </div>
+</section>
+
+<style>
+  .section-block {
+    padding-block: clamp(4rem, 10vw, 7.5rem) 0;
+  }
+
+  .bento-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 640px) {
+    .bento-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .cell--terminal {
+      grid-column: span 2;
+    }
+  }
+  @media (min-width: 1024px) {
+    .bento-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+    .cell--terminal,
+    [data-demo='claude'] {
+      grid-column: span 2;
+    }
+  }
+
+  .bento-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+    padding: 1.25rem;
+    border-radius: var(--radius-md);
+    transition:
+      border-color var(--duration-hover) ease,
+      box-shadow var(--duration-hover) ease;
+  }
+  .bento-cell:hover,
+  .bento-cell:focus-within {
+    border-color: var(--color-accent-dark);
+    box-shadow: var(--shadow-glow);
+  }
+
+  .bento-demo {
+    height: 168px;
+    margin-bottom: 0.625rem;
+    border: 1px solid var(--color-border-soft);
+    border-radius: var(--radius-sm);
+    background: var(--color-bg);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .bento-marker {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-2xs);
+    letter-spacing: 0.04em;
+    color: var(--color-accent-dark);
+  }
+  .bento-title {
+    margin: 0;
+    font-size: var(--text-h3);
+    font-weight: 700;
+    color: var(--color-white);
+  }
+  .bento-desc {
+    margin: 0;
+    font-size: var(--text-sm);
+    line-height: var(--text-sm--line-height);
+    color: var(--color-muted);
+  }
+
+  /* -------- terminal -------- */
+  .bdemo-term {
+    align-items: stretch;
+    justify-content: flex-start;
+    padding: 0.875rem 1rem;
+  }
+  .bdemo-term-out {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    line-height: 1.7;
+    color: var(--color-text);
+    overflow: hidden;
+  }
+  .bdemo-term-out :global(.bt-prompt) {
+    color: var(--color-accent);
+  }
+  .bdemo-term-out :global(.bt-out) {
+    color: var(--color-muted);
+  }
+
+  /* -------- gauge -------- */
+  .bdemo-gauge-wrap {
+    position: relative;
+    width: 118px;
+    height: 118px;
+  }
+  .bdemo-gauge-svg {
+    width: 100%;
+    height: 100%;
+  }
+  .bdemo-gauge-svg circle {
+    fill: none;
+    stroke-width: 7;
+    stroke-linecap: round;
+  }
+  .bdemo-gauge-svg .bg-arc {
+    stroke: var(--color-surface-2);
+  }
+  .bdemo-gauge-svg .fg-arc {
+    stroke: var(--color-accent);
+    filter: drop-shadow(0 0 6px rgb(0 219 213 / 0.45));
+  }
+  .bdemo-gauge-num {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+  }
+  .bdemo-gauge-num span {
+    font-size: var(--text-h3);
+    font-weight: 700;
+    color: var(--color-white);
+  }
+  .bdemo-gauge-num small {
+    font-size: var(--text-2xs);
+    color: var(--color-muted);
+  }
+
+  /* -------- keycaps -------- */
+  .bdemo-keys-row {
+    display: flex;
+    gap: 0.625rem;
+  }
+  .bkey {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    font-family: var(--font-mono);
+    font-size: var(--text-body);
+    color: var(--color-muted);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-soft);
+    border-bottom-width: 3px;
+    border-radius: var(--radius-sm);
+    transition:
+      color var(--duration-hover) ease,
+      border-color var(--duration-hover) ease,
+      box-shadow var(--duration-hover) ease,
+      transform 120ms ease;
+  }
+  .bkey.is-pressed {
+    color: var(--color-accent);
+    border-color: var(--color-accent-dark);
+    box-shadow: var(--shadow-glow);
+    transform: translateY(2px);
+  }
+
+  /* -------- git graph -------- */
+  .bdemo-git-svg {
+    width: min(100%, 260px);
+    height: auto;
+    padding-inline: 0.75rem;
+  }
+  .git-main {
+    stroke: var(--color-border-strong);
+    stroke-width: 2;
+    fill: none;
+  }
+  .git-branch {
+    stroke: var(--color-accent);
+    stroke-width: 2;
+    fill: none;
+  }
+  .git-dot {
+    fill: var(--color-surface-2);
+    stroke: var(--color-border-strong);
+    stroke-width: 2;
+  }
+  .git-dot--branch {
+    stroke: var(--color-accent);
+  }
+  .git-dot--head {
+    fill: var(--color-accent);
+    stroke: var(--color-accent);
+    filter: drop-shadow(0 0 5px rgb(0 219 213 / 0.6));
+  }
+  .git-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    fill: var(--color-muted);
+  }
+  .git-label--branch,
+  .git-label--head {
+    fill: var(--color-accent);
+  }
+
+  /* -------- dotfiles -------- */
+  .bdemo-dots {
+    align-items: flex-start;
+    justify-content: stretch;
+    position: relative;
+  }
+  .bdemo-dots::before,
+  .bdemo-dots::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 28px;
+    z-index: 1;
+    pointer-events: none;
+  }
+  .bdemo-dots::before {
+    top: 0;
+    background: linear-gradient(var(--color-bg), transparent);
+  }
+  .bdemo-dots::after {
+    bottom: 0;
+    background: linear-gradient(transparent, var(--color-bg));
+  }
+  .bdemo-dots-inner {
+    margin: 0;
+    padding: 0.875rem 1rem;
+    font-family: var(--font-mono);
+    font-size: var(--text-2xs);
+    line-height: 1.8;
+    color: var(--color-muted);
+    will-change: transform;
+  }
+
+  /* -------- claude -------- */
+  .bdemo-claude {
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 0.625rem;
+    padding: 0.875rem 1rem;
+  }
+  .bc-user {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-accent);
+  }
+  .bc-reply {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    line-height: 1.7;
+    color: var(--color-text);
+  }
+  .bc-reply.is-streaming::after {
+    content: '▍';
+    color: var(--color-accent);
+    animation: bc-blink 1s steps(1) infinite;
+  }
+  @keyframes bc-blink {
+    50% {
+      opacity: 0;
+    }
+  }
+</style>
