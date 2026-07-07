@@ -63,7 +63,7 @@ const home = lang === 'es' ? '/' : '/en';
   import { prefersReducedMotion } from '../../scripts/lifecycle';
 
   const BOOT_TEXT = 'init mkcodev v1.0 ... ok';
-  const CHAR_MS = 24;
+  const CHAR_MS = 18;
 
   async function runBoot(overlay: HTMLElement): Promise<void> {
     const textEl = overlay.querySelector<HTMLElement>('[data-boot-text]');
@@ -77,7 +77,7 @@ const home = lang === 'es' ? '/' : '/en';
         textEl.textContent = BOOT_TEXT.slice(0, i);
         await new Promise((r) => setTimeout(r, CHAR_MS));
       }
-      await new Promise((r) => setTimeout(r, 220));
+      await new Promise((r) => setTimeout(r, 160));
     }
     overlay.classList.add('boot--done');
     setTimeout(() => {

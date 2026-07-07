@@ -376,8 +376,6 @@ const allLinks = [...leftLinks, ...rightLinks];
 </style>
 
 <script>
-  import gsap from 'gsap';
-
   import { prefersReducedMotion } from '../scripts/lifecycle';
 
   // Delegación a nivel de documento: sobrevive a los swaps de View Transitions.
@@ -389,7 +387,7 @@ const allLinks = [...leftLinks, ...rightLinks];
     return menu && btn ? { menu, btn } : null;
   }
 
-  function setOpen(next: boolean): void {
+  async function setOpen(next: boolean): Promise<void> {
     const found = els();
     if (!found) return;
     const { menu, btn } = found;
@@ -400,6 +398,10 @@ const allLinks = [...leftLinks, ...rightLinks];
       menu.hidden = !next;
       return;
     }
+
+    // Import dinámico: gsap no entra en el bundle eager del navbar (TBT).
+    const { default: gsap } = await import('gsap');
+    if (open !== next) return; // otro toggle ganó durante el await
 
     if (next) {
       menu.hidden = false;
@@ -429,17 +431,17 @@ const allLinks = [...leftLinks, ...rightLinks];
   document.addEventListener('click', (e) => {
     const target = e.target as Element;
     if (target.closest('[data-menu-toggle]')) {
-      setOpen(!open);
+      void setOpen(!open);
       return;
     }
     if (target.closest('[data-menu-close]') || (open && !target.closest('[data-mega-menu]'))) {
-      setOpen(false);
+      void setOpen(false);
     }
   });
 
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && open) {
-      setOpen(false);
+      void setOpen(false);
       (document.querySelector('[data-menu-toggle]') as HTMLElement | null)?.focus();
     }
   });

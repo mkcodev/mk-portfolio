@@ -60,20 +60,34 @@
 }
 
 /* Fallbacks con métricas ajustadas — protegen marca Y CLS con font-display: swap.
+   Valores calibrados empíricamente con canvas TextMetrics (override% = métrica real / size-adjust).
    Decisión registrada en CLAUDE.md (enmienda de fuentes). */
 @font-face {
   font-family: 'Space Grotesk Fallback';
   src: local('Arial');
-  size-adjust: 101%;
-  ascent-override: 98%;
-  descent-override: 29%;
+  size-adjust: 105.36%;
+  ascent-override: 93.02%;
+  descent-override: 27.52%;
   line-gap-override: 0%;
 }
 @font-face {
   font-family: 'JetBrains Mono Fallback';
   src: local('Courier New');
-  size-adjust: 100%;
-  ascent-override: 102%;
+  size-adjust: 99.98%;
+  ascent-override: 102.02%;
   descent-override: 30%;
   line-gap-override: 0%;
+}
+
+/* Glifos box-drawing/bloques/flechas del ASCII art: no están en los subsets
+   latin de fontsource. Sin esta cara, cada pasada de layout escanea las
+   fuentes del sistema glifo a glifo (~200ms extra por layout, medido con
+   tracing). Generado con scripts/subset-symbols.mjs (8 KB). */
+@font-face {
+  font-family: 'JetBrains Mono Variable';
+  src: url('/fonts/jbm-symbols.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+2190-21FF, U+2500-259F, U+2713-2717;
 }

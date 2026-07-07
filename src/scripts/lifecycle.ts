@@ -16,27 +16,48 @@ type InitFn = () => CleanupFn | void;
 const inits: InitFn[] = [];
 let cleanups: CleanupFn[] = [];
 let started = false;
+let pageReady = false;
+let runToken = 0;
 
 export function onPageLoad(init: InitFn): void {
   inits.push(init);
 }
 
-function runInits(): void {
-  cleanups = inits.map((init) => init()).filter((c): c is CleanupFn => typeof c === 'function');
+/** Cada init corre en su propia tarea (yield entre módulos): trocea el
+ *  trabajo en tareas <50ms y evita long tasks que disparan el TBT. */
+async function runInits(): Promise<void> {
+  const token = ++runToken;
+  for (const init of inits) {
+    if (token !== runToken) return; // hubo swap durante la secuencia
+    const cleanup = init();
+    if (typeof cleanup === 'function') cleanups.push(cleanup);
+    await new Promise((resolve) => setTimeout(resolve, 0));
+  }
 }
 
-function runCleanups(): void {
+function handlePageLoad(): void {
+  if (pageReady) return;
+  pageReady = true;
+  void runInits();
+}
+
+function handleBeforeSwap(): void {
+  pageReady = false;
+  runToken += 1; // cancela cualquier secuencia de inits en curso
   const pending = cleanups;
   cleanups = [];
   pending.forEach((cleanup) => cleanup());
 }
 
-/** Llamar una única vez desde el entry (app.ts). */
+/** Llamar una única vez desde el entry. El entry difiere la carga a idle
+ *  (post-load), así que el astro:page-load inicial ya pasó: se compensa
+ *  ejecutando los inits de inmediato si el documento ya está cargado. */
 export function startLifecycle(): void {
   if (started) return;
   started = true;
-  document.addEventListener('astro:page-load', runInits);
-  document.addEventListener('astro:before-swap', runCleanups);
+  document.addEventListener('astro:page-load', handlePageLoad);
+  document.addEventListener('astro:before-swap', handleBeforeSwap);
+  if (document.readyState !== 'loading') handlePageLoad();
 }
 
 export function prefersReducedMotion(): boolean {
