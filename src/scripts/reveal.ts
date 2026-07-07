@@ -46,6 +46,8 @@ export function initReveals(): (() => void) | void {
           ease: 'power3.out',
           stagger: 0.08,
           scrollTrigger: { trigger: group, start: 'top 82%', toggleActions: TOGGLE },
+          // El transform inline residual pisa los :hover CSS (lift de las cards)
+          onComplete: () => gsap.set(items, { clearProps: 'transform' }),
         },
       );
     });

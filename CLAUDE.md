@@ -73,4 +73,6 @@ Tokens GSAP: entradas `power3.out 0.6–0.9s` · salidas `power2.in 0.4s` · hov
 
 1. Screenshot 1440px Y 390px, mirarlos.
 2. Estados interactivos con Playwright: hover cards/bento, mega menu abierto, ⌘K abierto, terminal tras comando.
-3. Commit por sección (conventional commits).
+3. **OJO**: `scripts/screenshot.mjs` emula `reducedMotion: 'reduce'` (para captar todo el contenido) — eso OCULTA bugs de animación. Los hovers/reveals se verifican con `reducedMotion: 'no-preference'`. Bug histórico: el transform inline residual de GSAP tras un reveal pisa los `:hover` CSS → siempre `clearProps: 'transform'` en `onComplete` si el elemento tiene hover con transform.
+4. Reduced motion es un modo de primera clase (Windows "Efectos de animación" off lo activa): sin movimiento pero CON feedback — global.css limita `transition-property` a opacidad/color/borde con 150ms, nunca `transition: none` global.
+5. Commit por sección (conventional commits).
