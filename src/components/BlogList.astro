@@ -1,0 +1,116 @@
+---
+import { getCollection } from 'astro:content';
+import SectionHeading from './SectionHeading.astro';
+import type { Lang } from '../data/site';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft && data.lang === lang)).sort(
+  (a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime(),
+);
+
+const title = lang === 'es' ? 'Blog' : 'Blog';
+const emptyMsg =
+  lang === 'es'
+    ? 'ls: nada por aquí todavía — escribiendo los primeros posts…'
+    : 'ls: nothing here yet — writing the first posts…';
+const dateFmt = new Intl.DateTimeFormat(lang === 'es' ? 'es-ES' : 'en-US', {
+  year: 'numeric',
+  month: 'short',
+  day: '2-digit',
+});
+---
+
+<div class="container-site blog-page">
+  <SectionHeading marker="~/blog" title={title} />
+
+  {
+    posts.length === 0 ? (
+      <div class="blog-empty" data-reveal-group>
+        <p class="blog-empty-cmd" data-reveal>
+          <span class="blog-prompt">$</span> ls ./posts
+        </p>
+        <p class="blog-empty-msg" data-reveal>
+          {emptyMsg}
+        </p>
+      </div>
+    ) : (
+      <ul class="blog-list" data-reveal-group>
+        {posts.map((post) => (
+          <li class="blog-item" data-reveal>
+            <a href={`${lang === 'es' ? '' : '/en'}/blog/${post.id}`}>
+              <span class="blog-item-title">{post.data.title}</span>
+              <time class="blog-item-date" datetime={post.data.pubDate.toISOString()}>
+                {dateFmt.format(post.data.pubDate)}
+              </time>
+            </a>
+            <p class="blog-item-desc">{post.data.description}</p>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+</div>
+
+<style>
+  .blog-page {
+    padding-block: clamp(7rem, 14vw, 10rem) 0;
+    min-height: 60vh;
+  }
+
+  .blog-empty {
+    font-family: var(--font-mono);
+  }
+  .blog-empty-cmd {
+    margin: 0 0 0.5rem;
+    font-size: var(--text-sm);
+    color: var(--color-text);
+  }
+  .blog-prompt {
+    color: var(--color-accent);
+  }
+  .blog-empty-msg {
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--color-muted);
+  }
+
+  .blog-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 2rem;
+    max-width: 680px;
+  }
+  .blog-item a {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    text-decoration: none;
+  }
+  .blog-item-title {
+    font-size: var(--text-lg);
+    color: var(--color-text);
+  }
+  .blog-item a:hover .blog-item-title,
+  .blog-item a:focus-visible .blog-item-title {
+    color: var(--color-accent);
+  }
+  .blog-item-date {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-muted);
+    white-space: nowrap;
+  }
+  .blog-item-desc {
+    margin: 0.35rem 0 0;
+    font-size: var(--text-sm);
+    color: var(--color-muted);
+    max-width: 560px;
+  }
+</style>

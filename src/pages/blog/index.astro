@@ -1,0 +1,15 @@
+---
+import Base from '../../layouts/Base.astro';
+import BlogList from '../../components/BlogList.astro';
+
+const lang = 'es' as const;
+---
+
+<Base
+  lang={lang}
+  title="Blog — mkcodev"
+  description="Notas sobre desarrollo web, rendimiento, SEO técnico y animación."
+  noIndex
+>
+  <BlogList lang={lang} />
+</Base>
