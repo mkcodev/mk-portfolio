@@ -3,12 +3,14 @@ interface Props {
   marker: string;
   title: string;
   id?: string;
+  /** false = sin reveal por scroll (necesario dentro de secciones pinned) */
+  animate?: boolean;
 }
 
-const { marker, title, id } = Astro.props;
+const { marker, title, id, animate = true } = Astro.props;
 ---
 
-<div class="section-heading" data-animate="section-heading">
+<div class="section-heading" data-animate={animate ? 'section-heading' : undefined}>
   <p class="section-marker" data-animate-marker>{marker}</p>
   <h2 id={id} class="section-title" data-animate-title>{title}</h2>
 </div>

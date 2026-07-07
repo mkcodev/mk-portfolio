@@ -1,0 +1,173 @@
+---
+import SectionHeading from '../SectionHeading.astro';
+import { useTranslations } from '../../i18n/ui';
+import { timeline } from '../../data/timeline';
+import type { Lang } from '../../data/site';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const yearLabel = (year: string) => (year === 'ahora' ? (lang === 'es' ? 'ahora' : 'now') : year);
+---
+
+<section id="trayectoria" class="container-site">
+  <div class="tl-pin" data-timeline>
+    <SectionHeading
+      marker={t('section.timeline')}
+      title={lang === 'es' ? 'Trayectoria' : 'Timeline'}
+      animate={false}
+    />
+    <p class="tl-cmd" aria-hidden="true">
+      <span class="tl-cmd-prompt">$</span> git log --graph --oneline
+    </p>
+
+    <ol class="tl-commits">
+      <span class="tl-line" data-tl-line aria-hidden="true"></span>
+      {
+        timeline.map((c) => (
+          <li class="tl-row" data-tl-row>
+            <span
+              class:list={[
+                'tl-dot',
+                { 'tl-dot--merge': c.isMerge === true, 'tl-dot--head': c.isHead === true },
+              ]}
+              data-tl-dot
+              aria-hidden="true"
+            />
+            <div class="tl-text" data-tl-text>
+              <span class:list={['tl-hash', { 'tl-hash--head': c.isHead === true }]}>{c.hash}</span>
+              <span class="tl-msg">{c.message[lang]}</span>
+              <span class="tl-year">{yearLabel(c.year)}</span>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .tl-pin {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-block: clamp(4rem, 10vw, 7.5rem) 0;
+  }
+  @media (min-width: 768px) {
+    .tl-pin {
+      min-height: 100svh;
+      padding-block: 0;
+    }
+  }
+
+  .tl-cmd {
+    margin: 0 0 1.75rem;
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-muted);
+  }
+  .tl-cmd-prompt {
+    color: var(--color-accent);
+  }
+
+  .tl-commits {
+    position: relative;
+    margin: 0;
+    padding: 0.25rem 0 0.25rem 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(1.25rem, 3.5vh, 2.25rem);
+  }
+  .tl-line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 6px;
+    width: 2px;
+    background: linear-gradient(var(--color-accent), var(--color-ink-deep));
+    border-radius: 1px;
+  }
+
+  .tl-row {
+    display: grid;
+    grid-template-columns: 14px minmax(0, 1fr);
+    column-gap: 1.25rem;
+    align-items: center;
+  }
+  .tl-dot {
+    position: relative;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--color-surface-2);
+    border: 2px solid var(--color-accent-dark);
+    z-index: 1;
+  }
+  .tl-dot--merge {
+    border-radius: 3px;
+    rotate: 45deg;
+    border-color: var(--color-accent);
+  }
+  .tl-dot--head {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    box-shadow: var(--shadow-glow);
+  }
+  .tl-dot--head::after {
+    content: '';
+    position: absolute;
+    inset: -5px;
+    border-radius: 50%;
+    border: 1px solid var(--color-accent);
+    animation: tl-pulse 2s ease-out infinite;
+  }
+  @keyframes tl-pulse {
+    from {
+      transform: scale(0.55);
+      opacity: 0.9;
+    }
+    to {
+      transform: scale(1.7);
+      opacity: 0;
+    }
+  }
+
+  .tl-text {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    column-gap: 1rem;
+    row-gap: 0.125rem;
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+  }
+  .tl-hash {
+    color: var(--color-accent);
+  }
+  .tl-hash--head {
+    color: var(--color-bg);
+    background: var(--color-accent);
+    padding: 0 0.375rem;
+    border-radius: 3px;
+    font-weight: 700;
+  }
+  .tl-msg {
+    color: var(--color-text);
+  }
+  .tl-year {
+    color: var(--color-muted);
+    font-size: var(--text-xs);
+  }
+  @media (min-width: 768px) {
+    .tl-year {
+      margin-left: auto;
+    }
+    .tl-msg {
+      font-size: var(--text-body);
+    }
+  }
+</style>
