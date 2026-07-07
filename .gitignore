@@ -29,3 +29,6 @@ refs/
 
 # vercel
 .vercel/
+
+.vercel
+.env*
