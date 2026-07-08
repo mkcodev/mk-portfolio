@@ -1,12 +1,3 @@
-import gsap from 'gsap';
-
-const THRESHOLD = 80;
-// Vueltas ENTERAS para que el logo aterrice en la misma orientación
-// (1.5 dejaba la moneda cabeza abajo al terminar el spin).
-const SPIN_TURNS = 2;
-const SPIN_DURATION = 1.1;
-const SPIN_EASE = 'power2.inOut';
-
 const SECTION_IDS = ['proyectos', 'como-trabajo', 'trayectoria', 'sobre-mi', 'contacto'];
 
 function initSectionActive(navbar: HTMLElement): (() => void) | undefined {
@@ -50,21 +41,13 @@ function initSectionActive(navbar: HTMLElement): (() => void) | undefined {
 }
 
 /**
- * Navbar cinemático:
- * - Compacta la barra (altura) al scroll >80px.
- * - Sustituye el shrink del logo por rotación acumulativa (1.5 vueltas, power2.inOut).
- * - Actualiza el progress ring alrededor del logo con scrollY/maxScroll.
- * - Marca link activo por sección visible (solo si hay anchors matching).
+ * Navbar: altura fija (siempre "compacto"). Solo actualiza el progress ring
+ * alrededor del logo y marca link activo por sección visible.
  */
 export function initNavbar(): (() => void) | void {
   const navbar = document.querySelector<HTMLElement>('[data-navbar]');
   if (!navbar) return;
-  const logoImg = navbar.querySelector<HTMLElement>('[data-nav-logo]');
   const progress = navbar.querySelector<SVGCircleElement>('[data-nav-progress]');
-
-  let compact = window.scrollY > THRESHOLD;
-  let rotation = 0;
-  navbar.classList.toggle('navbar--compact', compact);
 
   let ticking = false;
 
@@ -75,28 +58,13 @@ export function initNavbar(): (() => void) | void {
     progress.style.strokeDashoffset = String(1 - p);
   };
 
-  const update = (): void => {
-    ticking = false;
-    applyProgress();
-    const shouldCompact = window.scrollY > THRESHOLD;
-    if (shouldCompact === compact) return;
-    compact = shouldCompact;
-    navbar.classList.toggle('navbar--compact', compact);
-    if (!logoImg) return;
-    const dir = compact ? 1 : -1;
-    rotation += dir * 360 * SPIN_TURNS;
-    gsap.to(logoImg, {
-      rotate: rotation,
-      duration: SPIN_DURATION,
-      ease: SPIN_EASE,
-      overwrite: 'auto',
-    });
-  };
-
   const onScroll = (): void => {
     if (ticking) return;
     ticking = true;
-    requestAnimationFrame(update);
+    requestAnimationFrame(() => {
+      ticking = false;
+      applyProgress();
+    });
   };
 
   applyProgress();

@@ -167,8 +167,7 @@ const ctaLabel = lang === 'es' ? 'open to work' : 'open to work';
     grid-template-columns: 1fr auto 1fr;
     align-items: center;
     gap: 1rem;
-    height: 72px;
-    transition: height var(--duration-hover) var(--ease-out-power3);
+    height: 60px;
   }
 
   .navbar-links {
@@ -258,7 +257,10 @@ const ctaLabel = lang === 'es' ? 'open to work' : 'open to work';
     }
   }
 
-  /* Logo-moneda: grande siempre. En scroll gira 2 vueltas (script). */
+  /* Logo-moneda: 72px de coin sobre navbar-inner de 60px = sobresale por
+     arriba y por abajo. El margin-top empuja el coin ligeramente hacia
+     abajo para respirar del borde superior de la ventana y desplazar el
+     "poke" al lado de abajo (más visible sobre las secciones). */
   .navbar-logo {
     position: relative;
     width: 72px;
@@ -268,12 +270,9 @@ const ctaLabel = lang === 'es' ? 'open to work' : 'open to work';
     place-items: center;
     overflow: visible;
     z-index: 2;
-    /* Sin este anclaje explícito, en móvil la ul de la izquierda se oculta
-       con display:none y logo + navbar-right colapsan a las 2 primeras
-       columnas (queda huella vacía a la derecha). Anclar en col 2 mantiene
-       el logo centrado y libera col 3 para navbar-right. */
     grid-column: 2;
     justify-self: center;
+    margin-top: 10px;
     transition: filter var(--duration-hover) ease;
   }
   .navbar-logo-face {
@@ -322,10 +321,6 @@ const ctaLabel = lang === 'es' ? 'open to work' : 'open to work';
     transition: stroke-dashoffset 140ms linear;
   }
 
-  :global(.navbar--compact) .navbar-inner {
-    height: 60px;
-  }
-
   .navbar-hairline {
     position: absolute;
     bottom: 0;
@@ -333,16 +328,10 @@ const ctaLabel = lang === 'es' ? 'open to work' : 'open to work';
     width: 100%;
     height: 1px;
     background: linear-gradient(90deg, transparent 0%, var(--color-accent) 50%, transparent 100%);
-    transform: translateX(-50%) scaleX(0);
+    transform: translateX(-50%) scaleX(1);
     transform-origin: 50% 50%;
     opacity: 0.55;
-    transition:
-      transform 0.55s var(--ease-out-power3),
-      opacity 0.4s ease;
     pointer-events: none;
-  }
-  :global(.navbar--compact) .navbar-hairline {
-    transform: translateX(-50%) scaleX(1);
   }
 
   .navbar-right {
@@ -404,13 +393,21 @@ const ctaLabel = lang === 'es' ? 'open to work' : 'open to work';
   }
 
   .navbar-lang {
+    /* Misma altura que el botón de menú (36px) para que ambos controles
+       ocupen la misma línea vertical dentro del navbar de 60px. */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 36px;
+    min-width: 36px;
+    padding: 0 0.6rem;
     font-family: var(--font-mono);
     font-size: var(--text-xs);
+    line-height: 1;
     color: var(--color-muted);
     text-decoration: none;
     border: 1px solid var(--color-border-soft);
     border-radius: var(--radius-sm);
-    padding: 0.25rem 0.5rem;
     transition:
       color var(--duration-hover) ease,
       border-color var(--duration-hover) ease;
@@ -424,8 +421,9 @@ const ctaLabel = lang === 'es' ? 'open to work' : 'open to work';
   .navbar-menu-btn {
     display: grid;
     place-items: center;
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
+    padding: 0;
     background: transparent;
     border: none;
     cursor: pointer;
@@ -459,7 +457,11 @@ const ctaLabel = lang === 'es' ? 'open to work' : 'open to work';
     transform: translateY(6px) rotate(45deg);
   }
   .navbar-menu-btn[aria-expanded='true'] .navbar-menu-icon::after {
-    transform: translateY(-7.5px) rotate(-45deg);
+    /* -6px (no -7.5): con -7.5 las barras del aspa cruzaban 1.5px por
+       encima del centro del botón. -6 exacto compensa el offset natural
+       (top: 4.5) más la altura de la línea central (1.5) para caer en el
+       mismo eje que la barra rotada de ::before. */
+    transform: translateY(-6px) rotate(-45deg);
   }
 
   /* ---------- Mega menu ---------- */
