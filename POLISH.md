@@ -512,8 +512,8 @@ Orden para Opus: **P0 → P14 → P16 → P15 → P17**, luego P1–P13 según t
 
 **En esta sesión (~3% Fable restante)** — 3 features de firma senior (orden P20 → P18 → P19):
 - ✅ **P20 — Projects horizontal cinema** (`src/components/ProjectFlagshipCinema.astro` + `src/scripts/projectsCinema.ts`): flagships convertidos en capítulos horizontales pinneados con scrub, parallax de imagen ±4 xPercent y progress bar accent. Grid natural en mobile <1024px. `[data-cinema]` añadido a la exclusión de `scrollSkew.ts` para no romper el pin.
-- **P18 — Commentary Mode ("Show me how")**: marcadores flotantes junto a cada efecto técnico del sitio. Toggle discreto (botón footer o tecla `?`). Hover → tooltip con explicación técnica breve + link al archivo del script. Meta-portfolio autoguiado.
-- **P19 — Case Study cinemático + fix `[PENDIENTE]`** *(reemplaza P0.5 y refuerza P0.2)*: SVG line drawing que conecta problema → resultado, contadores GSAP en métricas, nodos ◇ por sección. `[PENDIENTE]` → punto pulsante + "medición en curso".
+- ✅ **P18 — Commentary Mode ("Show me how")** (`src/data/commentary.ts` + `src/scripts/commentaryMode.ts` + `src/components/CommentaryToggle.astro`): 8 marcadores `?` sobre efectos técnicos con tooltip glass (nombre + desc + libs + file path). Toggle en footer o tecla `m` (la `?` sigue reservada al overlay de atajos). Persistencia en `localStorage['mk:commentary']`. Los efectos globales (glyph tunnel, scroll skew) usan `pinToViewport: true` para anclarse a esquinas del viewport en vez de al elemento.
+- ✅ **P19 — Case Study cinemático + fix `[PENDIENTE]`** (`src/scripts/caseStudy.ts` + edits en `CaseStudy.astro`): SVG line drawing con scrub que conecta las secciones, nodos ◇ que se activan por sección al entrar en viewport, contadores GSAP en las métricas (reutilizando patrón del bento gauge). `[PENDIENTE]` → punto pulsante cyan + label `pendiente de medir`/`to be measured`; cuando el valor real sustituya `[PENDIENTE]` en `projects.ts`, el counter se activa solo.
 
 **Todo lo demás (P0.1–P0.4, P1–P13, P14–P17) queda pendiente para Opus** con las specs y el orden ya fijados arriba.
 

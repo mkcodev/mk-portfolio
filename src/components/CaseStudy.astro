@@ -68,8 +68,32 @@ const backHref = lang === 'es' ? '/#proyectos' : '/en#proyectos';
 
   {
     cs && (
-      <div class="cs-body">
-        <section class="cs-section" data-reveal-group>
+      <div class="cs-body" data-cs-body>
+        <svg
+          class="cs-connector"
+          data-cs-connector
+          aria-hidden="true"
+          viewBox="0 0 12 100"
+          preserveAspectRatio="none"
+        >
+          <path
+            data-cs-line
+            d="M 6 0 V 100"
+            pathLength="1"
+            stroke="var(--color-accent)"
+            stroke-width="1"
+            fill="none"
+            stroke-dasharray="1"
+            stroke-dashoffset="1"
+            vector-effect="non-scaling-stroke"
+            opacity="0.45"
+          />
+        </svg>
+
+        <section class="cs-section" data-reveal-group data-cs-step>
+          <span class="cs-node" data-cs-node aria-hidden="true">
+            ◇
+          </span>
           <h2 class="cs-section-title" data-reveal>
             {t('cs.problem')}
           </h2>
@@ -78,7 +102,10 @@ const backHref = lang === 'es' ? '/#proyectos' : '/en#proyectos';
           </p>
         </section>
 
-        <section class="cs-section" data-reveal-group>
+        <section class="cs-section" data-reveal-group data-cs-step>
+          <span class="cs-node" data-cs-node aria-hidden="true">
+            ◇
+          </span>
           <h2 class="cs-section-title" data-reveal>
             {t('cs.stack')}
           </h2>
@@ -87,7 +114,10 @@ const backHref = lang === 'es' ? '/#proyectos' : '/en#proyectos';
           </p>
         </section>
 
-        <section class="cs-section" data-reveal-group>
+        <section class="cs-section" data-reveal-group data-cs-step>
+          <span class="cs-node" data-cs-node aria-hidden="true">
+            ◇
+          </span>
           <h2 class="cs-section-title" data-reveal>
             {t('cs.decisions')}
           </h2>
@@ -103,7 +133,10 @@ const backHref = lang === 'es' ? '/#proyectos' : '/en#proyectos';
           </ul>
         </section>
 
-        <section class="cs-section" data-reveal-group>
+        <section class="cs-section" data-reveal-group data-cs-step>
+          <span class="cs-node" data-cs-node aria-hidden="true">
+            ◇
+          </span>
           <h2 class="cs-section-title" data-reveal>
             {t('cs.result')}
           </h2>
@@ -113,27 +146,40 @@ const backHref = lang === 'es' ? '/#proyectos' : '/en#proyectos';
         </section>
 
         {cs.metricas.length > 0 && (
-          <section class="cs-section" data-reveal-group>
+          <section class="cs-section" data-reveal-group data-cs-step>
+            <span class="cs-node" data-cs-node aria-hidden="true">
+              ◇
+            </span>
             <h2 class="cs-section-title" data-reveal>
               {t('cs.metrics')}
             </h2>
             <div class="cs-metrics">
-              {cs.metricas.map((m) => (
-                <div class="cs-metric" data-reveal>
-                  <p
-                    class="cs-metric-value"
-                    class:list={{ 'cs-metric-value--pending': m.value === '[PENDIENTE]' }}
-                  >
-                    {m.value === '[PENDIENTE]' ? '--' : m.value}
-                  </p>
-                  <p class="cs-metric-label">
-                    {m.label[lang]}
-                    {m.value === '[PENDIENTE]' && (
-                      <span class="cs-metric-pending"> · {t('cs.pending')}</span>
+              {cs.metricas.map((m) => {
+                const isPending = m.value === '[PENDIENTE]';
+                return (
+                  <div class="cs-metric" data-reveal>
+                    {isPending ? (
+                      <p
+                        class="cs-metric-value cs-metric-value--pending"
+                        data-cs-metric-value
+                        data-cs-pending
+                      >
+                        <span class="cs-pending-dot" aria-hidden="true">
+                          ·
+                        </span>
+                      </p>
+                    ) : (
+                      <p class="cs-metric-value" data-cs-metric-value>
+                        {m.value}
+                      </p>
                     )}
-                  </p>
-                </div>
-              ))}
+                    <p class="cs-metric-label">
+                      {m.label[lang]}
+                      {isPending && <span class="cs-metric-pending"> · {t('cs.pending')}</span>}
+                    </p>
+                  </div>
+                );
+              })}
             </div>
           </section>
         )}
@@ -206,11 +252,51 @@ const backHref = lang === 'es' ? '/#proyectos' : '/en#proyectos';
   }
 
   .cs-body {
+    position: relative;
     display: flex;
     flex-direction: column;
     gap: clamp(2.5rem, 5vw, 4rem);
     margin-top: clamp(2.5rem, 5vw, 4rem);
     max-width: 680px;
+    padding-left: 32px;
+  }
+  .cs-connector {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 12px;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+  }
+  .cs-section {
+    position: relative;
+  }
+  .cs-node {
+    position: absolute;
+    left: -32px;
+    top: 2px;
+    width: 14px;
+    height: 14px;
+    display: grid;
+    place-items: center;
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 1;
+    background: var(--color-bg);
+    border-radius: 50%;
+    opacity: 0;
+    transform: scale(0.4);
+    transition:
+      opacity 0.35s var(--ease-out-power3),
+      transform 0.35s var(--ease-out-power3),
+      text-shadow 0.35s ease;
+  }
+  .cs-section.is-active .cs-node {
+    opacity: 1;
+    transform: scale(1);
+    text-shadow: 0 0 8px var(--color-accent);
   }
   .cs-section-title {
     margin: 0 0 1rem;
@@ -267,6 +353,27 @@ const backHref = lang === 'es' ? '/#proyectos' : '/en#proyectos';
   }
   .cs-metric-value--pending {
     color: var(--color-muted);
+    min-height: 1.2em;
+    display: inline-flex;
+    align-items: center;
+  }
+  .cs-pending-dot {
+    display: inline-block;
+    font-size: 1.6em;
+    line-height: 0;
+    color: var(--color-accent);
+    animation: cs-pending-pulse 1.6s ease-in-out infinite;
+  }
+  @keyframes cs-pending-pulse {
+    0%,
+    100% {
+      opacity: 0.3;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.15);
+    }
   }
   .cs-metric-label {
     margin: 0.375rem 0 0;
