@@ -104,9 +104,7 @@ export function initGlyphTunnel(): (() => void) | void {
   let rafId = 0;
 
   const build = () => {
-    tunnels = canvases
-      .map(buildTunnel)
-      .filter((t): t is Tunnel => t !== null);
+    tunnels = canvases.map(buildTunnel).filter((t): t is Tunnel => t !== null);
   };
 
   const frame = () => {

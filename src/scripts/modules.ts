@@ -17,6 +17,7 @@ import { initAsciiPhoto } from './ascii';
 import { initMagnetic } from './magnetic';
 import { initKeys } from './keys';
 import { initEggs } from './eggs';
+import { initCommentaryMode } from './commentaryMode';
 
 onPageLoad(initScroll);
 onPageLoad(initNavbar);
@@ -34,6 +35,7 @@ onPageLoad(initAsciiPhoto);
 onPageLoad(initMagnetic);
 onPageLoad(initKeys);
 onPageLoad(initEggs);
+onPageLoad(initCommentaryMode);
 
 // Los reveals se crean ANTES que el pin del timeline y se refrescan en orden
 // de creación: sin sort() el offset del pin no se propaga a los triggers

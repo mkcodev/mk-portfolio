@@ -100,6 +100,11 @@ export function initKeys(): () => void {
       const delta = e.key === 'j' ? SCROLL_STEP : -SCROLL_STEP;
       if (lenis) lenis.scrollTo(window.scrollY + delta, { duration: 0.35 });
       else window.scrollBy(0, delta);
+      return;
+    }
+    if (e.key === 'm' && !e.shiftKey) {
+      e.preventDefault();
+      window.dispatchEvent(new CustomEvent('mk:commentary-toggle'));
     }
   };
 

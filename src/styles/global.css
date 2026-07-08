@@ -262,3 +262,172 @@ html.crt body {
     display: none;
   }
 }
+
+/* ============================================================
+   Commentary Mode — meta-portfolio autoguiado (commentaryMode.ts)
+   ============================================================ */
+.cm-marker {
+  position: fixed;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgb(0 219 213 / 0.12);
+  border: 1px solid var(--color-accent);
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  cursor: help;
+  z-index: 150;
+  opacity: 0;
+  transform: scale(0.4);
+  pointer-events: none;
+  transition:
+    opacity 0.28s var(--ease-out-power3),
+    transform 0.28s var(--ease-out-power3),
+    background-color var(--duration-hover) ease,
+    box-shadow var(--duration-hover) ease;
+}
+body[data-commentary='on'] .cm-marker {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto;
+  animation: cm-marker-pulse 2.6s ease-in-out infinite;
+}
+.cm-marker:hover,
+.cm-marker:focus-visible {
+  background: rgb(0 219 213 / 0.24);
+  box-shadow: 0 0 0 4px rgb(0 219 213 / 0.14);
+  animation-play-state: paused;
+}
+@keyframes cm-marker-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgb(0 219 213 / 0.35);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgb(0 219 213 / 0);
+  }
+}
+
+.cm-tooltip {
+  position: fixed;
+  z-index: 151;
+  width: min(320px, calc(100vw - 24px));
+  padding: 12px 14px 14px;
+  background: rgb(4 7 7 / 0.94);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgb(0 219 213 / 0.35);
+  border-radius: var(--radius-md);
+  font-family: var(--font-mono);
+  color: var(--color-text);
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease;
+}
+.cm-tooltip[data-visible='on'] {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+.cm-tip-title {
+  margin: 0 0 6px;
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+.cm-tip-desc {
+  margin: 0 0 10px;
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  line-height: 1.55;
+  color: var(--color-muted);
+}
+.cm-tip-libs {
+  list-style: none;
+  margin: 0 0 10px;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.cm-tip-libs li {
+  font-size: var(--text-2xs);
+  letter-spacing: 0.04em;
+  color: var(--color-accent);
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-sm);
+  padding: 2px 6px;
+}
+.cm-tip-file {
+  margin: 0;
+  font-size: var(--text-2xs);
+  color: var(--color-accent-dark);
+  word-break: break-all;
+}
+
+.cm-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  background: transparent;
+  border: 1px solid var(--color-border-soft);
+  color: var(--color-muted);
+  padding: 0.35rem 0.65rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition:
+    color var(--duration-hover) ease,
+    border-color var(--duration-hover) ease,
+    box-shadow var(--duration-hover) ease;
+}
+.cm-toggle:hover,
+.cm-toggle:focus-visible {
+  color: var(--color-accent);
+  border-color: var(--color-accent-dark);
+}
+.cm-toggle[aria-pressed='true'] {
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 1px rgb(0 219 213 / 0.35) inset;
+}
+.cm-toggle-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-muted);
+  transition: background-color var(--duration-hover) ease;
+}
+.cm-toggle[aria-pressed='true'] .cm-toggle-dot {
+  background: var(--color-accent);
+  box-shadow: 0 0 6px var(--color-accent);
+}
+.cm-toggle-kbd {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--color-accent);
+  border: 1px solid var(--color-border-soft);
+  border-radius: 3px;
+  padding: 1px 5px;
+  letter-spacing: 0;
+  text-transform: lowercase;
+}
+@media (pointer: coarse) {
+  .cm-toggle {
+    display: none;
+  }
+}

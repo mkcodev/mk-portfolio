@@ -1,0 +1,42 @@
+---
+import type { Lang } from '../data/site';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const label = lang === 'es' ? 'show me how' : 'show me how';
+const aria = lang === 'es' ? 'Activar modo comentario técnico' : 'Toggle commentary mode';
+---
+
+<button
+  type="button"
+  class="cm-toggle"
+  data-commentary-toggle
+  aria-pressed="false"
+  aria-label={aria}
+>
+  <span class="cm-toggle-dot" aria-hidden="true"></span>
+  {label}
+  <kbd class="cm-toggle-kbd" aria-hidden="true">m</kbd>
+</button>
+
+<script>
+  function syncToggle(): void {
+    const btns = document.querySelectorAll<HTMLButtonElement>('[data-commentary-toggle]');
+    const on = document.body.dataset['commentary'] === 'on';
+    for (const btn of btns) btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+  }
+
+  function onClick(e: MouseEvent): void {
+    const target = e.target;
+    if (!(target instanceof Element)) return;
+    if (!target.closest('[data-commentary-toggle]')) return;
+    window.dispatchEvent(new CustomEvent('mk:commentary-toggle'));
+  }
+
+  document.addEventListener('click', onClick);
+  document.addEventListener('mk:commentary-state', syncToggle);
+  document.addEventListener('astro:page-load', syncToggle);
+  syncToggle();
+</script>

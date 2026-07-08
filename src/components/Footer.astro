@@ -2,6 +2,7 @@
 import { execSync } from 'node:child_process';
 import { SITE, type Lang } from '../data/site';
 import { useTranslations } from '../i18n/ui';
+import CommentaryToggle from './CommentaryToggle.astro';
 
 interface Props {
   lang: Lang;
@@ -43,6 +44,7 @@ try {
         }
       </p>
       <p class="footer-hint">{t('footer.hint')}</p>
+      <CommentaryToggle lang={lang} />
     </div>
   </div>
 </footer>
