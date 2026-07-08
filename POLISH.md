@@ -481,3 +481,23 @@ Reglas de oro para el ejecutor (además de las globales de arriba):
 | P13 | Blog empty state | 45m | ★ |
 
 Después de cada ítem: `pnpm astro check` + screenshots 1440/390 + estados interactivos + commit conventional (CLAUDE.md §Verificación).
+
+---
+
+# Continuación (08-07-2026) — P14–P17 + efectos ya implementados
+
+**Implementados y verificados** (además de P5): `glyphTunnel.ts` (columnas laterales de glifos a velocidad de scroll), `scrollSkew.ts` (skewY ±3deg por velocity, timeline excluido del skew — su pin rompería), `cursorTrail.ts` (estela de glifos). NO tocar salvo bug.
+
+## P14 — Split-word H2 con clip-path (2h) ★★★★
+Sobre `[data-animate-title]`: cada palabra en `<span>` dentro de wrapper `overflow:hidden`. Trigger actual del heading. `y: 100% → 0` + `clip-path: inset(100% 0 0 0) → inset(0)`, `power4.out 0.9s`, stagger 0.08s. Mantener marker antes. Anti-CLS: los spans no cambian el flujo (inline-block, sin padding).
+
+## P15 — Bio blur reveal (1.5h) ★★★
+`hero-tagline` + párrafos de About. Partir en líneas visuales con `Range` + `getClientRects()` (SIN dependencia externa). Por línea: `filter: blur(10px) → 0` + `y: 14 → 0`, `power3.out 0.7s`, stagger 0.09s, ScrollTrigger `top 82%`. Cleanup: restaurar texto original (el splitter muta el DOM).
+
+## P16 — Parallax 3D case study frame (2h) ★★★
+`.browser-frame` de `CaseStudy.astro`: contenedor con `perspective: 1200px`; frame `rotateY/rotateX` máx 5deg siguiendo cursor con lerp 0.1 (patrón rAF de `heroGlow.ts`). Highlight radial interno que sigue al cursor (CSS vars --mx/--my como el bento spotlight P6). Solo pointer fine; return early mobile.
+
+## P17 — Constellation graph (3h) ★★★
+Sección nueva 60vh entre hero y `#proyectos`: 6 nodos SVG (1 por proyecto de `src/data/projects.ts`, coordenadas fijas). Líneas `stroke-dashoffset` dibujadas con ScrollTrigger scrub. Nodo: glow accent, hover tooltip mono (nombre+stack), click `scrollToTarget('#proyectos')`. Cierra el hueco de P0.2 con contenido.
+
+Orden para Opus: **P0 → P14 → P16 → P15 → P17**, luego P1–P13 según tabla original.

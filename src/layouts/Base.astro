@@ -106,6 +106,9 @@ const jsonLd = {
   </head>
   <body>
     <a href="#main-content" class="skip-link">{t('skip.content')}</a>
+    <canvas class="glyph-tunnel" data-glyph-tunnel="left" aria-hidden="true"></canvas>
+    <canvas class="glyph-tunnel glyph-tunnel--right" data-glyph-tunnel="right" aria-hidden="true"
+    ></canvas>
     <Navbar lang={lang} />
     <main id="main-content">
       <slot />
