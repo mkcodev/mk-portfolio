@@ -1,7 +1,9 @@
 import gsap from 'gsap';
 
 const THRESHOLD = 80;
-const SPIN_TURNS = 1.5;
+// Vueltas ENTERAS para que el logo aterrice en la misma orientación
+// (1.5 dejaba la moneda cabeza abajo al terminar el spin).
+const SPIN_TURNS = 2;
 const SPIN_DURATION = 1.1;
 const SPIN_EASE = 'power2.inOut';
 

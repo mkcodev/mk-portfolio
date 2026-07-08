@@ -60,10 +60,25 @@ h4 {
 @utility glass {
   /* ÚNICA receta de glassmorphism: navbar, mega menu, bento, ⌘K, modals */
   background: rgb(255 255 255 / 0.04);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
   border: 1px solid rgb(255 255 255 / 0.09);
   box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.06);
+}
+
+/* Separado del @utility: Lightning CSS de Tailwind v4 dedupe `backdrop-filter`
+   y `-webkit-backdrop-filter` cuando conviven en la misma regla y termina
+   dejando SOLO la versión con prefijo. Firefox no soporta el prefijo -webkit-,
+   así que en producción los .glass quedan sin blur (nav, mega menu, ⌘K, bento).
+   Emitiendo cada uno en su propia regla vía @supports, ningún paso de la build
+   los colapsa. */
+@supports (-webkit-backdrop-filter: blur(1px)) {
+  .glass {
+    -webkit-backdrop-filter: blur(14px);
+  }
+}
+@supports (backdrop-filter: blur(1px)) {
+  .glass {
+    backdrop-filter: blur(14px);
+  }
 }
 
 @utility glow {
