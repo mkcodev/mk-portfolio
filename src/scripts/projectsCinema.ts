@@ -3,7 +3,14 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-function buildCinema(cinema: HTMLElement): void {
+type CinemaOpts = {
+  parallaxRange: number;
+  copyLagX: number;
+  copyLagOpacity: number;
+  scrub: number;
+};
+
+function buildCinema(cinema: HTMLElement, opts: CinemaOpts): void {
   const track = cinema.querySelector<HTMLElement>('[data-proj-track]');
   if (!track) return;
   const chapters = track.querySelectorAll<HTMLElement>('[data-proj-chapter]');
@@ -17,7 +24,7 @@ function buildCinema(cinema: HTMLElement): void {
       start: 'top top',
       end: () => `+=${distance()}`,
       pin: true,
-      scrub: 1.2,
+      scrub: opts.scrub,
       invalidateOnRefresh: true,
     },
   });
@@ -30,10 +37,15 @@ function buildCinema(cinema: HTMLElement): void {
   }
 
   // Deriva horizontal sutil de las imágenes contra el movimiento del track.
-  // El img tiene 110% de ancho con margin -5%: ±4 xPercent nunca deja borde visto.
+  // Desktop: img 110% + margin -5%, parallaxRange 4. Móvil: 106% + -3%, parallaxRange 2.
   const imgs = track.querySelectorAll<HTMLElement>('[data-cin-img]');
   if (imgs.length > 0) {
-    tl.fromTo(imgs, { xPercent: -4 }, { xPercent: 4, ease: 'none', duration: 1 }, 0);
+    tl.fromTo(
+      imgs,
+      { xPercent: -opts.parallaxRange },
+      { xPercent: opts.parallaxRange, ease: 'none', duration: 1 },
+      0,
+    );
   }
 
   // La copy de los capítulos siguientes entra con lag respecto al track.
@@ -44,7 +56,7 @@ function buildCinema(cinema: HTMLElement): void {
     const at = ((i - 0.55) / (chapters.length - 1)) * 1;
     tl.fromTo(
       copy,
-      { xPercent: 10, opacity: 0.2 },
+      { xPercent: opts.copyLagX, opacity: opts.copyLagOpacity },
       { xPercent: 0, opacity: 1, ease: 'none', duration: 0.45 },
       Math.max(0, at),
     );
@@ -76,23 +88,22 @@ function buildTabletReveal(cinema: HTMLElement): void {
 
 /**
  * Flagships:
- * - ≥1024px: cinema horizontal pinneado con GSAP.
+ * - ≥1024px: cinema horizontal pinneado con GSAP, parallax ±4, scrub 1.2.
  * - 768-1023px (tablet): chapters apilados con reveal fade+y por scroll.
- * - <768px (móvil): scroll horizontal nativo con CSS scroll-snap.
- *   Lenis intercepta los touch events globalmente, así que necesitamos
- *   data-lenis-prevent en el cinema para que Lenis ignore ese contenedor
- *   y el swipe horizontal llegue al scroll nativo del navegador.
+ * - <768px (móvil): mismo cinema pinneado con parámetros atenuados (parallax ±2, scrub 0.6).
+ *   Lenis convierte el swipe vertical en scrollTop → ScrollTrigger lo traduce a x del track.
  */
 export function initProjectsCinema(): (() => void) | void {
   const cinema = document.querySelector<HTMLElement>('[data-proj-cinema]');
   if (!cinema) return;
 
   const mm = gsap.matchMedia();
-  mm.add('(min-width: 1024px)', () => buildCinema(cinema));
+  mm.add('(min-width: 1024px)', () =>
+    buildCinema(cinema, { parallaxRange: 4, copyLagX: 10, copyLagOpacity: 0.2, scrub: 1.2 }),
+  );
   mm.add('(min-width: 768px) and (max-width: 1023px)', () => buildTabletReveal(cinema));
-  mm.add('(max-width: 767px)', () => {
-    cinema.setAttribute('data-lenis-prevent', '');
-    return () => cinema.removeAttribute('data-lenis-prevent');
-  });
+  mm.add('(max-width: 767px)', () =>
+    buildCinema(cinema, { parallaxRange: 2, copyLagX: 6, copyLagOpacity: 0.4, scrub: 0.6 }),
+  );
   return () => mm.revert();
 }

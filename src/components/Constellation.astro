@@ -36,22 +36,14 @@ const edges: Array<[number, number]> = [
 ];
 
 const heading = lang === 'es' ? 'proyectos' : 'projects';
-const sub =
-  lang === 'es'
-    ? '6 proyectos · una historia'
-    : '6 projects · one story';
+const sub = lang === 'es' ? '6 proyectos · una historia' : '6 projects · one story';
 ---
 
 <section class="constellation" aria-hidden="true" data-constellation>
   <div class="container-site const-inner">
     <p class="const-label">// {heading}.constellation</p>
     <p class="const-sub">{sub}</p>
-    <svg
-      class="const-svg"
-      viewBox="0 0 100 100"
-      preserveAspectRatio="xMidYMid meet"
-      role="img"
-    >
+    <svg class="const-svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" role="img">
       {
         edges.map(([a, b]) => {
           const pa = positions[a]!;
@@ -76,12 +68,7 @@ const sub =
             <g class="const-node-wrap" data-const-node data-proj-slug={proj?.slug ?? ''}>
               <circle class="const-node-halo" cx={p.x} cy={p.y} r="2.6" />
               <circle class="const-node" cx={p.x} cy={p.y} r="1.1" />
-              <text
-                class="const-node-label"
-                x={p.x}
-                y={p.y - 3.6}
-                text-anchor="middle"
-              >
+              <text class="const-node-label" x={p.x} y={p.y - 3.6} text-anchor="middle">
                 {proj?.title ?? ''}
               </text>
             </g>

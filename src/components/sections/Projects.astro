@@ -126,25 +126,11 @@ const rest = projects.filter((p) => !p.flagship);
     }
   }
 
-  /* Móvil: scroll horizontal nativo con snap — el track mantiene
-     display:flex + width:max-content del default y cada chapter
-     ocupa 100vw con scroll-snap-align:start (ver ProjectFlagshipCinema). */
+  /* Móvil: mismo cinema pinneado que desktop — overflow:hidden permite el pin de GSAP.
+     El track de width:max-content (2×100vw) se anima via scrub con swipe vertical. */
   @media (max-width: 767px) {
     .proj-cinema {
-      overflow-x: scroll;
-      overflow-y: hidden;
-      scroll-snap-type: x mandatory;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-    }
-    .proj-cinema::-webkit-scrollbar {
-      display: none;
-    }
-    /* La barra de progreso no funciona bien en overflow-x:scroll
-       (se desplaza con el contenido). En móvil con 2 slides el snap
-       visual es suficiente feedback. */
-    .proj-cinema-progress {
-      display: none;
+      overflow: hidden;
     }
   }
 

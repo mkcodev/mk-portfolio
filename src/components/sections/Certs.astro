@@ -30,7 +30,10 @@ const markerCount = `$ ls certs/ | wc -l → ${certs.length}`;
 ---
 
 <section id="certificaciones" class="container-site section-block">
-  <SectionHeading marker={markerCount} title={lang === 'es' ? 'Certificaciones' : 'Certifications'} />
+  <SectionHeading
+    marker={markerCount}
+    title={lang === 'es' ? 'Certificaciones' : 'Certifications'}
+  />
 
   {
     flagship && (

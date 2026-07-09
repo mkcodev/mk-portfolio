@@ -88,7 +88,10 @@ function initEntrance(): void {
     const parts = (stack.textContent ?? '').split(' · ');
     if (parts.length > 1) {
       stack.innerHTML = parts
-        .map((p, i) => `<span class="cs-chip" style="opacity:0">${p}</span>${i < parts.length - 1 ? '<span class="cs-chip-sep"> · </span>' : ''}`)
+        .map(
+          (p, i) =>
+            `<span class="cs-chip" style="opacity:0">${p}</span>${i < parts.length - 1 ? '<span class="cs-chip-sep"> · </span>' : ''}`,
+        )
         .join('');
       gsap.to(stack.querySelectorAll('.cs-chip'), {
         opacity: 1,

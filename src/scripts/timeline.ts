@@ -3,9 +3,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const TOGGLE = 'play reverse play reverse';
-
-function buildScrub(wrap: HTMLElement): void {
+function buildScrub(wrap: HTMLElement, opts: { end: string }): void {
   const line = wrap.querySelector('[data-tl-line]');
   const rows = wrap.querySelectorAll<HTMLElement>('[data-tl-row]');
   if (!line || rows.length === 0) return;
@@ -14,7 +12,7 @@ function buildScrub(wrap: HTMLElement): void {
     scrollTrigger: {
       trigger: wrap,
       start: 'top top',
-      end: '+=170%',
+      end: opts.end,
       pin: true,
       scrub: 0.8,
       invalidateOnRefresh: true,
@@ -42,57 +40,13 @@ function buildScrub(wrap: HTMLElement): void {
   });
 }
 
-function buildMobile(wrap: HTMLElement): void {
-  const line = wrap.querySelector('[data-tl-line]');
-  const rows = wrap.querySelectorAll<HTMLElement>('[data-tl-row]');
-  if (rows.length === 0) return;
-
-  const commits = wrap.querySelector<HTMLElement>('.tl-commits');
-  if (line) {
-    gsap.fromTo(
-      line,
-      { scaleY: 0, transformOrigin: 'top center' },
-      {
-        scaleY: 1,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: commits ?? wrap,
-          start: 'top 80%',
-          end: 'bottom 60%',
-          scrub: 0.6,
-          invalidateOnRefresh: true,
-        },
-      },
-    );
-  }
-  // Trigger por fila: cada commit revela cuando entra al viewport,
-  // no todos a la vez cuando el top del wrap toca 80%.
-  rows.forEach((row) => {
-    gsap.fromTo(
-      row,
-      { opacity: 0, x: -16 },
-      {
-        opacity: 1,
-        x: 0,
-        duration: 0.55,
-        ease: 'power3.out',
-        scrollTrigger: {
-          trigger: row,
-          start: 'top 88%',
-          toggleActions: TOGGLE,
-        },
-      },
-    );
-  });
-}
-
-/** git log 2019→2026 — pin+scrub SOLO ≥768px; mobile: lista vertical con stagger. */
+/** git log 2019→2026 — pin+scrub en todos los breakpoints. Móvil usa end más corto. */
 export function initTimeline(): (() => void) | void {
   const wrap = document.querySelector<HTMLElement>('[data-timeline]');
   if (!wrap) return;
 
   const mm = gsap.matchMedia();
-  mm.add('(min-width: 768px)', () => buildScrub(wrap));
-  mm.add('(max-width: 767px)', () => buildMobile(wrap));
+  mm.add('(min-width: 768px)', () => buildScrub(wrap, { end: '+=170%' }));
+  mm.add('(max-width: 767px)', () => buildScrub(wrap, { end: '+=140%' }));
   return () => mm.revert();
 }

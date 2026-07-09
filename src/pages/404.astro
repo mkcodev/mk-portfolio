@@ -55,7 +55,8 @@ const lang = 'es' as const;
     reveals.forEach((el) => {
       el.style.opacity = '0';
       el.style.transform = 'translateY(16px)';
-      el.style.transition = 'opacity 0.5s var(--ease-out-power3), transform 0.5s var(--ease-out-power3)';
+      el.style.transition =
+        'opacity 0.5s var(--ease-out-power3), transform 0.5s var(--ease-out-power3)';
     });
 
     type(cmd, {
@@ -65,10 +66,13 @@ const lang = 'es' as const;
           error.style.opacity = '1';
           code.style.opacity = '1';
           reveals.forEach((el, i) => {
-            setTimeout(() => {
-              el.style.opacity = '1';
-              el.style.transform = 'translateY(0)';
-            }, 120 + i * 80);
+            setTimeout(
+              () => {
+                el.style.opacity = '1';
+                el.style.transform = 'translateY(0)';
+              },
+              120 + i * 80,
+            );
           });
         }, 300);
       },

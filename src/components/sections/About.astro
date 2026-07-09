@@ -33,7 +33,13 @@ const status =
 
   <div class="about-grid" data-reveal-group>
     <div class="about-text" data-reveal>
-      {paragraphs[lang].map((p) => <p class="about-p" data-blur-lines>{p}</p>)}
+      {
+        paragraphs[lang].map((p) => (
+          <p class="about-p" data-blur-lines>
+            {p}
+          </p>
+        ))
+      }
       <p class="about-status">
         <span class="about-status-dot" aria-hidden="true"></span>
         {status}

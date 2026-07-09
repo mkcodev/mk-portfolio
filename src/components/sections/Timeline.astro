@@ -29,7 +29,9 @@ const yearLabel = (year: string) => (year === 'ahora' ? (lang === 'es' ? 'ahora'
       {
         timeline.map((c) => {
           const rawMsg = c.message[lang];
-          const match = /^(feat|fix|refactor|chore|docs|perf|ci|test|release):\s*(.+)$/.exec(rawMsg);
+          const match = /^(feat|fix|refactor|chore|docs|perf|ci|test|release):\s*(.+)$/.exec(
+            rawMsg,
+          );
           const commitType = match?.[1] ?? '';
           const commitRest = match?.[2] ?? rawMsg;
           return (
@@ -67,13 +69,8 @@ const yearLabel = (year: string) => (year === 'ahora' ? (lang === 'es' ? 'ahora'
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding-block: clamp(4rem, 10vw, 7.5rem) 0;
-  }
-  @media (min-width: 768px) {
-    .tl-pin {
-      min-height: 100svh;
-      padding-block: 0;
-    }
+    min-height: 100svh;
+    padding-block: 0;
   }
 
   .tl-cmd {

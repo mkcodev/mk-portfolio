@@ -183,34 +183,41 @@ const pad = (n: number) => String(n).padStart(2, '0');
     }
   }
 
-  /* Móvil: cada chapter es un slide de 100vw dentro del carrusel.
-     El flex: 0 0 100vw del default se mantiene — solo añadimos
-     scroll-snap-align y ajustamos el layout interno. */
+  /* Móvil: cada chapter es un slide de 100vw × 100svh dentro del cinema pinneado.
+     flex: 0 0 100vw y height: 100svh vienen del default — no se tocan.
+     Layout single-column: imagen arriba (max 38svh) + copy centrado verticalmente. */
   @media (max-width: 767px) {
     .cin-chapter {
-      height: auto;
-      scroll-snap-align: start;
-      padding-block: clamp(1.5rem, 6vw, 2.5rem);
+      padding-block: 0;
     }
     .cin-inner {
       grid-template-columns: 1fr;
-      padding-inline: clamp(1rem, 6vw, 2rem);
-      gap: 1rem;
+      padding-inline: clamp(1rem, 6vw, 1.5rem);
+      gap: clamp(0.75rem, 3vw, 1.25rem);
+      align-content: center;
+    }
+    .cin-copy {
+      gap: 0.6rem;
     }
     .cin-media {
       order: -1;
       height: auto;
       aspect-ratio: 16 / 10;
+      max-height: 38svh;
     }
     .cin-media img {
-      width: 100%;
-      margin-left: 0;
-      will-change: auto;
+      width: 106%;
+      margin-left: -3%;
+      will-change: transform;
     }
     .cin-title {
       font-size: var(--text-h2);
       line-height: var(--text-h2--line-height);
       letter-spacing: var(--text-h2--letter-spacing);
+    }
+    .cin-desc {
+      font-size: var(--text-sm);
+      line-height: var(--text-sm--line-height);
     }
     .cin-index {
       font-size: var(--text-body);
