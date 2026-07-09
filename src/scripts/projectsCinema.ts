@@ -51,7 +51,7 @@ function buildCinema(cinema: HTMLElement): void {
   });
 }
 
-function buildMobileReveal(cinema: HTMLElement): void {
+function buildTabletReveal(cinema: HTMLElement): void {
   const chapters = cinema.querySelectorAll<HTMLElement>('[data-proj-chapter]');
   if (chapters.length === 0) return;
   chapters.forEach((chapter) => {
@@ -74,13 +74,18 @@ function buildMobileReveal(cinema: HTMLElement): void {
   });
 }
 
-/** Flagships: desktop ≥1024px cinema pinneado horizontal · mobile reveal por scroll. */
+/**
+ * Flagships:
+ * - ≥1024px: cinema horizontal pinneado con GSAP.
+ * - 768-1023px (tablet): chapters apilados con reveal fade+y por scroll.
+ * - <768px (móvil): scroll horizontal nativo con CSS scroll-snap; sin GSAP.
+ */
 export function initProjectsCinema(): (() => void) | void {
   const cinema = document.querySelector<HTMLElement>('[data-proj-cinema]');
   if (!cinema) return;
 
   const mm = gsap.matchMedia();
   mm.add('(min-width: 1024px)', () => buildCinema(cinema));
-  mm.add('(max-width: 1023px)', () => buildMobileReveal(cinema));
+  mm.add('(min-width: 768px) and (max-width: 1023px)', () => buildTabletReveal(cinema));
   return () => mm.revert();
 }

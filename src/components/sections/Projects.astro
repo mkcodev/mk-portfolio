@@ -106,7 +106,8 @@ const rest = projects.filter((p) => !p.flagship);
     pointer-events: none;
   }
 
-  @media (max-width: 1023px) {
+  /* Tablet: chapters apilados en grid vertical */
+  @media (min-width: 768px) and (max-width: 1023px) {
     .proj-cinema {
       overflow: visible;
       margin-inline: auto;
@@ -120,6 +121,28 @@ const rest = projects.filter((p) => !p.flagship);
       width: auto;
       will-change: auto;
     }
+    .proj-cinema-progress {
+      display: none;
+    }
+  }
+
+  /* Móvil: scroll horizontal nativo con snap — el track mantiene
+     display:flex + width:max-content del default y cada chapter
+     ocupa 100vw con scroll-snap-align:start (ver ProjectFlagshipCinema). */
+  @media (max-width: 767px) {
+    .proj-cinema {
+      overflow-x: scroll;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .proj-cinema::-webkit-scrollbar {
+      display: none;
+    }
+    /* La barra de progreso no funciona bien en overflow-x:scroll
+       (se desplaza con el contenido). En móvil con 2 slides el snap
+       visual es suficiente feedback. */
     .proj-cinema-progress {
       display: none;
     }
