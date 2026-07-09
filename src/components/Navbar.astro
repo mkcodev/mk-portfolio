@@ -158,12 +158,10 @@ const ctaLabel = lang === 'es' ? 'open to work' : 'open to work';
        sin esto, el mega menu tapa el logo cuando abre porque va después
        en el DOM. */
     z-index: 2;
-    /* Empuja todo el bar 10px hacia abajo. Antes el offset vertical
-       vivía en .navbar-logo (margin-top) y solo desplazaba el coin,
-       dejando links + EN + menú 5px por encima de su centro. Con el
-       padding aquí, todos los items del grid se alinean vertical dentro
-       del mismo inner. */
-    padding-top: 10px;
+    /* padding-block simétrico: los items del inner (60px) quedan
+       centrados verticalmente dentro del bar (60+10=70px). Antes usábamos
+       padding-top: 10px que empujaba todo al borde inferior. */
+    padding-block: 5px;
     border-inline: none;
     border-top: none;
     border-radius: 0;
@@ -196,11 +194,12 @@ const ctaLabel = lang === 'es' ? 'open to work' : 'open to work';
     .navbar-links {
       display: flex;
     }
-    .navbar-links--left {
-      justify-content: flex-end;
-    }
+    /* Ambos grupos de links se centran en su columna 1fr — así los
+       elementos del navbar quedan balanceados alrededor del logo en
+       vez de pegados al centro (izq) o al borde (der). */
+    .navbar-links--left,
     .navbar-links--right {
-      justify-content: flex-start;
+      justify-content: center;
     }
   }
   .navbar-link {
@@ -272,10 +271,9 @@ const ctaLabel = lang === 'es' ? 'open to work' : 'open to work';
     }
   }
 
-  /* Logo-moneda: 72px de coin sobre navbar-inner de 60px = sobresale por
-     arriba y por abajo. El margin-top empuja el coin ligeramente hacia
-     abajo para respirar del borde superior de la ventana y desplazar el
-     "poke" al lado de abajo (más visible sobre las secciones). */
+  /* Logo-moneda: 72px de coin sobre navbar-inner de 60px = sobresale
+     6px por arriba y 6px por abajo, simétrico. Sin margin-top: el bar
+     ya centra sus items con padding-block. */
   .navbar-logo {
     position: relative;
     width: 72px;
@@ -289,7 +287,6 @@ const ctaLabel = lang === 'es' ? 'open to work' : 'open to work';
        flotando en medio con los grupos de links a cada lado). */
     grid-column: 1;
     justify-self: start;
-    margin-top: 10px;
     transition: filter var(--duration-hover) ease;
   }
   @media (min-width: 900px) {
