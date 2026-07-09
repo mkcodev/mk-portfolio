@@ -51,12 +51,36 @@ function buildCinema(cinema: HTMLElement): void {
   });
 }
 
-/** Flagships como capítulos horizontales pinneados — solo desktop ≥1024px. */
+function buildMobileReveal(cinema: HTMLElement): void {
+  const chapters = cinema.querySelectorAll<HTMLElement>('[data-proj-chapter]');
+  if (chapters.length === 0) return;
+  chapters.forEach((chapter) => {
+    gsap.fromTo(
+      chapter,
+      { opacity: 0, y: 32 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.75,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: chapter,
+          start: 'top 85%',
+          toggleActions: 'play reverse play reverse',
+        },
+        onComplete: () => gsap.set(chapter, { clearProps: 'transform' }),
+      },
+    );
+  });
+}
+
+/** Flagships: desktop ≥1024px cinema pinneado horizontal · mobile reveal por scroll. */
 export function initProjectsCinema(): (() => void) | void {
   const cinema = document.querySelector<HTMLElement>('[data-proj-cinema]');
   if (!cinema) return;
 
   const mm = gsap.matchMedia();
   mm.add('(min-width: 1024px)', () => buildCinema(cinema));
+  mm.add('(max-width: 1023px)', () => buildMobileReveal(cinema));
   return () => mm.revert();
 }

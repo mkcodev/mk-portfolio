@@ -44,33 +44,46 @@ function buildScrub(wrap: HTMLElement): void {
 
 function buildMobile(wrap: HTMLElement): void {
   const line = wrap.querySelector('[data-tl-line]');
-  const rows = wrap.querySelectorAll('[data-tl-row]');
+  const rows = wrap.querySelectorAll<HTMLElement>('[data-tl-row]');
   if (rows.length === 0) return;
 
+  const commits = wrap.querySelector<HTMLElement>('.tl-commits');
   if (line) {
     gsap.fromTo(
       line,
       { scaleY: 0, transformOrigin: 'top center' },
       {
         scaleY: 1,
-        duration: 1,
-        ease: 'power3.out',
-        scrollTrigger: { trigger: wrap, start: 'top 80%', toggleActions: TOGGLE },
+        ease: 'none',
+        scrollTrigger: {
+          trigger: commits ?? wrap,
+          start: 'top 80%',
+          end: 'bottom 60%',
+          scrub: 0.6,
+          invalidateOnRefresh: true,
+        },
       },
     );
   }
-  gsap.fromTo(
-    rows,
-    { opacity: 0, x: -16 },
-    {
-      opacity: 1,
-      x: 0,
-      duration: 0.6,
-      ease: 'power3.out',
-      stagger: 0.09,
-      scrollTrigger: { trigger: wrap, start: 'top 80%', toggleActions: TOGGLE },
-    },
-  );
+  // Trigger por fila: cada commit revela cuando entra al viewport,
+  // no todos a la vez cuando el top del wrap toca 80%.
+  rows.forEach((row) => {
+    gsap.fromTo(
+      row,
+      { opacity: 0, x: -16 },
+      {
+        opacity: 1,
+        x: 0,
+        duration: 0.55,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: row,
+          start: 'top 88%',
+          toggleActions: TOGGLE,
+        },
+      },
+    );
+  });
 }
 
 /** git log 2019→2026 — pin+scrub SOLO ≥768px; mobile: lista vertical con stagger. */

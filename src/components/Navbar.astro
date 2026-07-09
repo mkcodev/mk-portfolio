@@ -367,6 +367,14 @@ const ctaLabel = lang === 'es' ? 'open to work' : 'open to work';
        EN + menu queden pegados al borde derecho en vez de junto al logo. */
     grid-column: 3;
   }
+  /* Desktop: el bloque derecho se centra en su columna 1fr, así los
+     elementos del navbar quedan balanceados alrededor del logo en vez
+     de pegados al borde. El logo mantiene su centrado propio. */
+  @media (min-width: 900px) {
+    .navbar-right {
+      justify-content: center;
+    }
+  }
 
   .navbar-cta {
     display: none;
