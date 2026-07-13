@@ -21,6 +21,7 @@ import { initEggs } from './eggs';
 import { initCommentaryMode } from './commentaryMode';
 import { initCaseStudy } from './caseStudy';
 import { initConstellation } from './constellation';
+import { initCodiOrb } from './codiOrb';
 
 onPageLoad(initScroll);
 onPageLoad(initNavbar);
@@ -42,6 +43,7 @@ onPageLoad(initEggs);
 onPageLoad(initCommentaryMode);
 onPageLoad(initCaseStudy);
 onPageLoad(initConstellation);
+onPageLoad(initCodiOrb);
 
 // Los reveals se crean ANTES que el pin del timeline y se refrescan en orden
 // de creación: sin sort() el offset del pin no se propaga a los triggers

@@ -13,6 +13,7 @@ import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
 import ShortcutsOverlay from '../components/ShortcutsOverlay.astro';
 import CommandPalette from '../components/islands/CommandPalette.tsx';
+import CodiChat from '../components/islands/codi/CodiChat.tsx';
 
 interface Props {
   lang: Lang;
@@ -116,6 +117,8 @@ const jsonLd = {
     <Footer lang={lang} />
     <ShortcutsOverlay lang={lang} />
     <CommandPalette client:idle lang={lang} transition:persist="cmdk" />
+    <div data-codi-orb transition:persist="codi-orb" class="codi-orb-wrapper"></div>
+    <CodiChat client:idle lang={lang} transition:persist="codi" />
     <script src="../scripts/app.ts"></script>
   </body>
 </html>
