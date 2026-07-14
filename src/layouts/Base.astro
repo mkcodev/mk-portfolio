@@ -7,6 +7,12 @@ import jetbrainsMonoUrl from '@fontsource-variable/jetbrains-mono/files/jetbrain
 
 import '../styles/global.css';
 import { SITE, SITE_URL, type Lang } from '../data/site';
+import {
+  personNode,
+  professionalServiceNode,
+  websiteNode,
+  type SchemaNode,
+} from '../data/schema';
 import { hreflangPair, isEsOnly } from '../i18n/routes';
 import { useTranslations } from '../i18n/ui';
 import Navbar from '../components/Navbar.astro';
@@ -21,9 +27,18 @@ interface Props {
   description: string;
   ogImage?: string;
   noIndex?: boolean;
+  /** Nodos JSON-LD adicionales de la página (webPage, breadcrumbs, faq…). */
+  schema?: SchemaNode[];
 }
 
-const { lang, title, description, ogImage = SITE.ogImage, noIndex = false } = Astro.props;
+const {
+  lang,
+  title,
+  description,
+  ogImage = SITE.ogImage,
+  noIndex = false,
+  schema = [],
+} = Astro.props;
 const t = useTranslations(lang);
 
 const path = Astro.url.pathname.replace(/\/+$/, '') || '/';
@@ -35,37 +50,7 @@ const ogImageAbs = new URL(ogImage, SITE_URL).href;
 
 const jsonLd = {
   '@context': 'https://schema.org',
-  '@graph': [
-    {
-      '@type': 'Person',
-      '@id': `${SITE_URL}/#person`,
-      name: SITE.author,
-      alternateName: SITE.name,
-      jobTitle: 'Full Stack Developer',
-      email: `mailto:${SITE.email}`,
-      url: SITE_URL,
-      sameAs: [SITE.github, SITE.linkedin],
-      address: { '@type': 'PostalAddress', addressLocality: 'Bilbao', addressCountry: 'ES' },
-      knowsAbout: [
-        'React',
-        'Next.js',
-        'Astro',
-        'TypeScript',
-        'SEO',
-        'Web Performance',
-        'Python',
-        'Flask',
-      ],
-    },
-    {
-      '@type': 'WebSite',
-      '@id': `${SITE_URL}/#website`,
-      name: SITE.name,
-      url: SITE_URL,
-      inLanguage: lang === 'es' ? 'es-ES' : 'en-US',
-      author: { '@id': `${SITE_URL}/#person` },
-    },
-  ],
+  '@graph': [personNode(), professionalServiceNode(), websiteNode(lang), ...schema],
 };
 ---
 
