@@ -6,7 +6,9 @@ const UPSTASH_TOKEN = import.meta.env.UPSTASH_REDIS_REST_TOKEN as string | undef
 const upstashAvailable = Boolean(UPSTASH_URL && UPSTASH_TOKEN);
 
 if (!upstashAvailable) {
-  console.error('[codi/ratelimit] Upstash env vars missing — falling back to client-side rate limit only. Set UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN for production.');
+  console.error(
+    '[codi/ratelimit] Upstash env vars missing — falling back to client-side rate limit only. Set UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN for production.',
+  );
 }
 
 async function upstashFetch(cmd: unknown[]): Promise<unknown> {
@@ -18,7 +20,7 @@ async function upstashFetch(cmd: unknown[]): Promise<unknown> {
     },
     body: JSON.stringify(cmd),
   });
-  const json = await res.json() as { result: unknown };
+  const json = (await res.json()) as { result: unknown };
   return json.result;
 }
 
@@ -57,7 +59,7 @@ export async function checkRateLimit(ctx: APIContext): Promise<RateLimitResult> 
     const count = (await upstashFetch(['ZCARD', key])) as number;
 
     if (count >= 30) {
-      const oldest = await upstashFetch(['ZRANGE', key, '0', '0', 'WITHSCORES']) as string[];
+      const oldest = (await upstashFetch(['ZRANGE', key, '0', '0', 'WITHSCORES'])) as string[];
       const oldestTs = oldest.length >= 2 ? parseInt(oldest[1], 10) : now;
       const retryAfter = Math.ceil((oldestTs + windowMs - now) / 1000);
       return { allowed: false, remaining: 0, retryAfter };
@@ -81,7 +83,7 @@ export async function checkBlocked(ctx: APIContext): Promise<StrikeResult> {
   const key = `codi:block:${ip}`;
 
   try {
-    const val = await upstashFetch(['GET', key]) as string | null;
+    const val = (await upstashFetch(['GET', key])) as string | null;
     if (!val) return { blocked: false };
     const blockedUntil = parseInt(val, 10);
     if (Date.now() >= blockedUntil) {
@@ -92,6 +94,20 @@ export async function checkBlocked(ctx: APIContext): Promise<StrikeResult> {
   } catch (err) {
     console.error('[codi/ratelimit] Upstash error checking block, fail-open:', err);
     return { blocked: false };
+  }
+}
+
+export async function getStrikeCount(ctx: APIContext): Promise<number> {
+  if (!upstashAvailable) return 0;
+
+  const ip = getIP(ctx);
+  const key = `codi:strikes:${ip}`;
+
+  try {
+    const val = (await upstashFetch(['GET', key])) as string | null;
+    return val ? parseInt(val, 10) : 0;
+  } catch {
+    return 0;
   }
 }
 

@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro';
 import { validateRequest } from '../../server/validate';
-import { checkBlocked, checkRateLimit, recordStrike } from '../../server/ratelimit';
+import { checkBlocked, checkRateLimit, getStrikeCount, recordStrike } from '../../server/ratelimit';
 import { buildPrompt } from '../../server/prompt';
 import { streamGemini, createSSERelay } from '../../server/gemini';
 
@@ -50,7 +50,7 @@ export const POST: APIRoute = async (ctx) => {
     );
   }
 
-  const strikeLevel = 0;
+  const strikeLevel = await getStrikeCount(ctx);
 
   const { systemInstruction, contents, maxOutputTokens } = buildPrompt(req, strikeLevel);
 
@@ -65,7 +65,7 @@ export const POST: APIRoute = async (ctx) => {
     });
   }
 
-  const sseStream = createSSERelay(geminiStream);
+  const sseStream = createSSERelay(geminiStream, () => recordStrike(ctx).then(() => undefined));
 
   return new Response(sseStream, {
     status: 200,

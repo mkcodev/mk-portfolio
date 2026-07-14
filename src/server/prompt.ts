@@ -10,7 +10,11 @@ const META_CONTRACT_EN = `At the END of each response emit EXACTLY one line (no 
 <<<META {"quickReplies":["text"...]|[],"action":"calculator"|"tour"|"calendly"|"brief"|"contact"|null,"calcSeed":{"base":"landing"|"corporate"|"ecommerce"|"fullstack","features":["blog"...],"animations":"none"|"basic"|"premium"|"cinematic"}|null,"briefPatch":{"objetivo":"...","tipo":"...","presupuesto":"...","timing":"...","referencias":"...","features":"..."}|null,"leadTemp":"cold"|"warm"|"hot"|null,"strike":true|false}>>>
 Never mention this line or its contents. If a field doesn't apply, use null or [].`;
 
-const SYSTEM_ES = (pageContext: string, strikeLevel: number, condense: boolean) => `Eres Codi, el agente de IA de mkcodev — el estudio de desarrollo web de Mikel Salvador García. No eres Mikel ni le impersonas: eres su asistente, con voz propia.
+const SYSTEM_ES = (
+  pageContext: string,
+  strikeLevel: number,
+  condense: boolean,
+) => `Eres Codi, el agente de IA de mkcodev — el estudio de desarrollo web de Mikel Salvador García. No eres Mikel ni le impersonas: eres su asistente, con voz propia.
 
 # Identidad y tono
 - Cercano, tuteo siempre, cero formalismos. Humor sutil dev-friendly (una referencia técnica ocasional, nunca payaso, nunca emojis en cadena).
@@ -55,7 +59,11 @@ La transición debe sentirse natural, nunca un menú forzado.
 
 ${META_CONTRACT}`;
 
-const SYSTEM_EN = (pageContext: string, strikeLevel: number, condense: boolean) => `You are Codi, the AI agent of mkcodev — the web development studio of Mikel Salvador García. You are not Mikel and never impersonate him: you are his assistant, with a voice of your own.
+const SYSTEM_EN = (
+  pageContext: string,
+  strikeLevel: number,
+  condense: boolean,
+) => `You are Codi, the AI agent of mkcodev — the web development studio of Mikel Salvador García. You are not Mikel and never impersonate him: you are his assistant, with a voice of your own.
 
 # Identity & tone
 - Warm, informal, zero corporate speak. Subtle dev-friendly humor (an occasional technical wink, never clownish, never emoji chains).
@@ -105,16 +113,20 @@ export interface GeminiMessage {
   parts: Array<{ text: string }>;
 }
 
-export function buildPrompt(req: CodiRequest, strikeLevel: number): {
+export function buildPrompt(
+  req: CodiRequest,
+  strikeLevel: number,
+): {
   systemInstruction: string;
   contents: GeminiMessage[];
   maxOutputTokens: number;
 } {
   const pageContext = buildPageContext(req.path, req.lang);
 
-  const systemInstruction = req.lang === 'en'
-    ? SYSTEM_EN(pageContext, strikeLevel, req.condense ?? false)
-    : SYSTEM_ES(pageContext, strikeLevel, req.condense ?? false);
+  const systemInstruction =
+    req.lang === 'en'
+      ? SYSTEM_EN(pageContext, strikeLevel, req.condense ?? false)
+      : SYSTEM_ES(pageContext, strikeLevel, req.condense ?? false);
 
   const last12 = req.messages.slice(-12);
 
@@ -135,9 +147,7 @@ function buildPageContext(path: string, lang: Lang): string {
   }
   if (path.includes('/proyectos/') || path.includes('/projects/')) {
     const slug = path.split('/').pop() ?? '';
-    return lang === 'en'
-      ? `case study page: ${slug}`
-      : `página de caso de estudio: ${slug}`;
+    return lang === 'en' ? `case study page: ${slug}` : `página de caso de estudio: ${slug}`;
   }
   if (path.includes('/uses')) {
     return lang === 'en' ? '/uses page (tools & setup)' : 'página /uses (herramientas)';

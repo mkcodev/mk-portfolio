@@ -100,7 +100,12 @@ type CodiAction =
   | { type: 'TOGGLE_SOUND' }
   | { type: 'TOGGLE_TERMINAL_MODE' }
   | { type: 'CLEAR_MEMORY' }
-  | { type: 'ADD_CODI_MESSAGE'; text: string; action?: MetaAction; calcSeed?: import('../../../data/codi/calculator').CalcSeed }
+  | {
+      type: 'ADD_CODI_MESSAGE';
+      text: string;
+      action?: MetaAction;
+      calcSeed?: import('../../../data/codi/calculator').CalcSeed;
+    }
   | { type: 'OPEN_BRIEF' }
   | { type: 'CLOSE_BRIEF' }
   | { type: 'RECORD_RATE' }
@@ -191,9 +196,7 @@ function reducer(state: CodiState, action: CodiAction): CodiState {
           : m,
       );
 
-      const newBrief = meta.briefPatch
-        ? { ...state.brief, ...meta.briefPatch }
-        : state.brief;
+      const newBrief = meta.briefPatch ? { ...state.brief, ...meta.briefPatch } : state.brief;
 
       const briefPanelOpen = state.briefPanelOpen || meta.action === 'brief';
 
@@ -202,7 +205,10 @@ function reducer(state: CodiState, action: CodiAction): CodiState {
         messages: updatedMessages,
         sessionTokens: state.persist.sessionTokens + Math.ceil(finalText.length / 4),
         strikes: meta.strike
-          ? { ...state.persist.strikes, count: Math.min(state.persist.strikes.count + 1, 3) as 0 | 1 | 2 | 3 }
+          ? {
+              ...state.persist.strikes,
+              count: Math.min(state.persist.strikes.count + 1, 3) as 0 | 1 | 2 | 3,
+            }
           : state.persist.strikes,
       };
 

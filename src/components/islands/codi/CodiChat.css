@@ -46,7 +46,9 @@
   z-index: calc(var(--z-codi) - 1);
 }
 @media (min-width: 768px) {
-  .codi-backdrop { display: none; }
+  .codi-backdrop {
+    display: none;
+  }
 }
 
 /* -------- Modal -------- */
@@ -95,7 +97,8 @@
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background: radial-gradient(circle at 35% 38%,
+  background: radial-gradient(
+    circle at 35% 38%,
     var(--color-accent) 0%,
     var(--color-accent-dark) 55%,
     #005855 100%
@@ -173,7 +176,9 @@
   scrollbar-width: thin;
   scrollbar-color: var(--color-border-soft) transparent;
 }
-.codi-messages::-webkit-scrollbar { width: 3px; }
+.codi-messages::-webkit-scrollbar {
+  width: 3px;
+}
 .codi-messages::-webkit-scrollbar-thumb {
   background: var(--color-border-soft);
   border-radius: 2px;
@@ -215,7 +220,8 @@
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: radial-gradient(circle at 35% 38%,
+  background: radial-gradient(
+    circle at 35% 38%,
     var(--color-accent) 0%,
     var(--color-accent-dark) 55%,
     #005855 100%
@@ -319,10 +325,14 @@
   padding: 0;
   font-size: inherit;
 }
-.codi-rich strong { font-weight: 600; }
+.codi-rich strong {
+  font-weight: 600;
+}
 
 /* Waveform + typewriter caret */
-.codi-waveform { display: block; }
+.codi-waveform {
+  display: block;
+}
 
 .codi-caret {
   display: inline-block;
@@ -332,8 +342,13 @@
   margin-left: 1px;
 }
 @keyframes codi-blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
 }
 
 /* -------- Quick Replies -------- */
@@ -365,7 +380,9 @@
   border-color: var(--color-accent);
   transform: translateY(-1px);
 }
-.codi-chip:active { transform: translateY(0); }
+.codi-chip:active {
+  transform: translateY(0);
+}
 .codi-chip:focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 1px;
@@ -453,8 +470,12 @@
   color: var(--color-muted);
   letter-spacing: 0.04em;
 }
-.codi-composer__rate--warn { color: rgb(251 146 60 / 0.85); }
-.codi-composer__rate--limit { color: rgb(248 113 113 / 0.9); }
+.codi-composer__rate--warn {
+  color: rgb(251 146 60 / 0.85);
+}
+.codi-composer__rate--limit {
+  color: rgb(248 113 113 / 0.9);
+}
 
 /* -------- Error row -------- */
 .codi-error-row {
@@ -482,7 +503,9 @@
   transition: background var(--duration-hover) ease;
   flex-shrink: 0;
 }
-.codi-retry-btn:hover { background: var(--color-accent-soft); }
+.codi-retry-btn:hover {
+  background: var(--color-accent-soft);
+}
 .codi-retry-btn:focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 1px;

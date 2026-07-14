@@ -137,8 +137,8 @@ export function initCodiOrb(): () => void {
 
     if (dist < 140) {
       const t = (140 - dist) / 140;
-      cursorDeltaX += (dx / dist * 6 * t - cursorDeltaX) * 0.08;
-      cursorDeltaY += (dy / dist * 6 * t - cursorDeltaY) * 0.08;
+      cursorDeltaX += ((dx / dist) * 6 * t - cursorDeltaX) * 0.08;
+      cursorDeltaY += ((dy / dist) * 6 * t - cursorDeltaY) * 0.08;
 
       if (dist < 60) {
         scrollVelocityMult = Math.max(scrollVelocityMult, 1.6);

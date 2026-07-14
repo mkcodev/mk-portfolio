@@ -10,7 +10,9 @@ export interface GeminiStreamParams {
   maxOutputTokens: number;
 }
 
-export async function streamGemini(params: GeminiStreamParams): Promise<ReadableStream<Uint8Array>> {
+export async function streamGemini(
+  params: GeminiStreamParams,
+): Promise<ReadableStream<Uint8Array>> {
   if (!GEMINI_API_KEY) {
     throw new Error('GEMINI_API_KEY is not configured');
   }
@@ -49,7 +51,12 @@ export async function streamGemini(params: GeminiStreamParams): Promise<Readable
   return response.body;
 }
 
-export function createSSERelay(geminiStream: ReadableStream<Uint8Array>): ReadableStream<Uint8Array> {
+const META_MARKER = '<<<META';
+
+export function createSSERelay(
+  geminiStream: ReadableStream<Uint8Array>,
+  onStrike?: () => Promise<void>,
+): ReadableStream<Uint8Array> {
   const encoder = new TextEncoder();
   const decoder = new TextDecoder();
 
@@ -57,6 +64,7 @@ export function createSSERelay(geminiStream: ReadableStream<Uint8Array>): Readab
     async start(controller) {
       const reader = geminiStream.getReader();
       let buffer = '';
+      let fullText = '';
 
       try {
         while (true) {
@@ -82,6 +90,7 @@ export function createSSERelay(geminiStream: ReadableStream<Uint8Array>): Readab
 
               const text = parsed.candidates?.[0]?.content?.parts?.[0]?.text;
               if (text) {
+                fullText += text;
                 const chunk = JSON.stringify({ t: text });
                 controller.enqueue(encoder.encode(`data: ${chunk}\n\n`));
               }
@@ -96,9 +105,28 @@ export function createSSERelay(geminiStream: ReadableStream<Uint8Array>): Readab
           }
         }
 
+        // Parse META for strike detection before closing the stream
+        if (onStrike) {
+          const metaIdx = fullText.indexOf(META_MARKER);
+          if (metaIdx >= 0) {
+            try {
+              const jsonStr = fullText
+                .slice(metaIdx + META_MARKER.length)
+                .replace(/>>>$/, '')
+                .trim();
+              const meta = JSON.parse(jsonStr) as { strike?: boolean };
+              if (meta.strike === true) {
+                await onStrike();
+              }
+            } catch {
+              // ignore parse errors
+            }
+          }
+        }
+
         controller.enqueue(encoder.encode('data: [DONE]\n\n'));
         controller.close();
-      } catch (err) {
+      } catch {
         controller.enqueue(encoder.encode(`data: ${JSON.stringify({ err: 'stream_error' })}\n\n`));
         controller.close();
       } finally {

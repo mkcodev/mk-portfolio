@@ -28,7 +28,17 @@ export const KNOWLEDGE = {
       es: 'Bootcamp Full Stack en 4Geeks Academy (360h)',
       en: 'Full Stack Bootcamp at 4Geeks Academy (360h)',
     },
-    stack: ['Next.js', 'Astro', 'TypeScript', 'React', 'Tailwind CSS', 'GSAP', 'Framer Motion', 'Python', 'Flask'],
+    stack: [
+      'Next.js',
+      'Astro',
+      'TypeScript',
+      'React',
+      'Tailwind CSS',
+      'GSAP',
+      'Framer Motion',
+      'Python',
+      'Flask',
+    ],
     availability: '[PENDIENTE: semanas hasta poder arrancar]',
     calendlyUrl: '[PENDIENTE: URL de Calendly]',
   },
@@ -182,7 +192,7 @@ export const KNOWLEDGE = {
       keywords: ['precio', 'price', 'cuánto', 'coste', 'cost', 'cuanto cuesta', 'how much'],
       answer: {
         es: 'Depende del proyecto. Una landing parte desde [PENDIENTE]€, una web corporativa entre [PENDIENTE]€, y proyectos con animaciones custom o full stack desde más. Cuéntame qué necesitas y te doy un rango real.',
-        en: 'Depends on the project. A landing starts from [PENDIENTE]€, a corporate site between [PENDIENTE]€, and projects with custom animations or full stack from more. Tell me what you need and I\'ll give you a real range.',
+        en: "Depends on the project. A landing starts from [PENDIENTE]€, a corporate site between [PENDIENTE]€, and projects with custom animations or full stack from more. Tell me what you need and I'll give you a real range.",
       },
     },
     {
@@ -210,7 +220,7 @@ export const KNOWLEDGE = {
       keywords: ['disponible', 'libre', 'cuando empieza', 'available', 'when can you start'],
       answer: {
         es: 'La disponibilidad varía. Escríbeme y te confirmo en cuánto podemos arrancar.',
-        en: 'Availability varies. Drop me a message and I\'ll confirm how soon we can start.',
+        en: "Availability varies. Drop me a message and I'll confirm how soon we can start.",
       },
     },
     {
@@ -224,7 +234,7 @@ export const KNOWLEDGE = {
       keywords: ['bilbao', 'remoto', 'spain', 'españa', 'donde', 'where', 'location'],
       answer: {
         es: 'Estoy en Bilbao pero trabajo 100% remoto. He trabajado con clientes de toda España y fuera.',
-        en: 'I\'m based in Bilbao but work 100% remotely. I\'ve worked with clients all over Spain and beyond.',
+        en: "I'm based in Bilbao but work 100% remotely. I've worked with clients all over Spain and beyond.",
       },
     },
     {

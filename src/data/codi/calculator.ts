@@ -20,17 +20,20 @@ export interface CalcResult {
   maxWeeks: number;
 }
 
-export const BASE_PRICES: Record<CalcSeed['base'], { min: number; max: number; minW: number; maxW: number }> = {
-  landing:   { min: 800,  max: 1200, minW: 1, maxW: 2 },
+export const BASE_PRICES: Record<
+  CalcSeed['base'],
+  { min: number; max: number; minW: number; maxW: number }
+> = {
+  landing: { min: 800, max: 1200, minW: 1, maxW: 2 },
   corporate: { min: 1500, max: 2500, minW: 3, maxW: 5 },
   ecommerce: { min: 2500, max: 4000, minW: 4, maxW: 7 },
   fullstack: { min: 4000, max: 8000, minW: 6, maxW: 12 },
 };
 
 export const ANIMATION_MODIFIERS: Record<AnimationTier, { price: number; weeks: number }> = {
-  none:      { price: 0,    weeks: 0 },
-  basic:     { price: 200,  weeks: 0.5 },
-  premium:   { price: 800,  weeks: 1.5 },
+  none: { price: 0, weeks: 0 },
+  basic: { price: 200, weeks: 0.5 },
+  premium: { price: 800, weeks: 1.5 },
   cinematic: { price: 2000, weeks: 3 },
 };
 

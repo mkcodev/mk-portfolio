@@ -25,7 +25,7 @@ export const STRINGS = {
     greetingFirst: {
       home: 'Hola. Soy Codi. ¿En qué te ayudo hoy?',
       caseStudy: '¿Te ha gustado el proyecto? Cuéntame en qué te puedo ayudar.',
-      en: 'Hi. I\'m Codi. What can I help you with?',
+      en: "Hi. I'm Codi. What can I help you with?",
       default: 'Hola. Soy Codi. Estoy aquí para ayudarte con lo que necesites.',
     },
     greetingReturn: 'Hola de nuevo. La última vez hablamos de {topic}. ¿Seguimos?',
@@ -79,10 +79,10 @@ export const STRINGS = {
     error: 'Something went wrong. Retry?',
     retry: 'Retry',
     greetingFirst: {
-      home: 'Hi. I\'m Codi. What can I help you with today?',
+      home: "Hi. I'm Codi. What can I help you with today?",
       caseStudy: 'Did you like the project? Tell me how I can help.',
-      en: 'Hi. I\'m Codi. What can I help you with?',
-      default: 'Hi. I\'m Codi. I\'m here to help with whatever you need.',
+      en: "Hi. I'm Codi. What can I help you with?",
+      default: "Hi. I'm Codi. I'm here to help with whatever you need.",
     },
     greetingReturn: 'Welcome back. Last time we talked about {topic}. Continue?',
     greetingReturnNoTopic: 'Welcome back. How can I help?',
@@ -90,7 +90,7 @@ export const STRINGS = {
       'How much does a website cost?',
       'See projects',
       'Schedule a call',
-      'What\'s your stack?',
+      "What's your stack?",
     ],
     quickRepliesReturn: ['Continue', 'New topic', 'Clear memory'],
     watermark: '> codi v1.0 — mkcodev',
@@ -115,4 +115,4 @@ export const STRINGS = {
   },
 } as const satisfies Record<Lang, object>;
 
-export type CodiStrings = typeof STRINGS[Lang];
+export type CodiStrings = (typeof STRINGS)[Lang];

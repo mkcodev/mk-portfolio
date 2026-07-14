@@ -41,12 +41,14 @@ function parseMeta(raw: string): MetaResult {
         : [],
       action: isValidAction(parsed.action) ? parsed.action : null,
       calcSeed: isValidCalcSeed(parsed.calcSeed) ? (parsed.calcSeed as CalcSeed) : null,
-      briefPatch: typeof parsed.briefPatch === 'object' && parsed.briefPatch !== null
-        ? (parsed.briefPatch as MetaResult['briefPatch'])
-        : null,
-      leadTemp: parsed.leadTemp === 'cold' || parsed.leadTemp === 'warm' || parsed.leadTemp === 'hot'
-        ? parsed.leadTemp
-        : null,
+      briefPatch:
+        typeof parsed.briefPatch === 'object' && parsed.briefPatch !== null
+          ? (parsed.briefPatch as MetaResult['briefPatch'])
+          : null,
+      leadTemp:
+        parsed.leadTemp === 'cold' || parsed.leadTemp === 'warm' || parsed.leadTemp === 'hot'
+          ? parsed.leadTemp
+          : null,
       strike: parsed.strike === true,
     };
   } catch {
@@ -93,7 +95,11 @@ export async function sendMessage(params: SendMessageParams): Promise<void> {
 
   if (!response.ok) {
     try {
-      const errBody = await response.json() as { error?: string; retryAfter?: number; blockedUntil?: number };
+      const errBody = (await response.json()) as {
+        error?: string;
+        retryAfter?: number;
+        blockedUntil?: number;
+      };
       if (response.status === 429) {
         onError(`rate_limited:${errBody.retryAfter ?? 60}`);
       } else if (response.status === 403) {
@@ -170,14 +176,16 @@ export async function sendMessage(params: SendMessageParams): Promise<void> {
     reader.releaseLock();
   }
 
-  const meta = metaLine.includes(META_DELIMITER) ? parseMeta(metaLine) : {
-    quickReplies: [],
-    action: null,
-    calcSeed: null,
-    briefPatch: null,
-    leadTemp: null,
-    strike: false,
-  };
+  const meta = metaLine.includes(META_DELIMITER)
+    ? parseMeta(metaLine)
+    : {
+        quickReplies: [],
+        action: null,
+        calcSeed: null,
+        briefPatch: null,
+        leadTemp: null,
+        strike: false,
+      };
 
   onDone(meta);
 }

@@ -15,9 +15,7 @@ export interface CodiRequest {
   sessionTokens?: number;
 }
 
-export type ValidationResult =
-  | { ok: true; data: CodiRequest }
-  | { ok: false; error: string };
+export type ValidationResult = { ok: true; data: CodiRequest } | { ok: false; error: string };
 
 export function validateRequest(body: unknown): ValidationResult {
   if (typeof body !== 'object' || body === null) {

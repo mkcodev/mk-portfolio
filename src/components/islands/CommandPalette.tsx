@@ -103,6 +103,16 @@ function buildCommands(lang: Lang, onCopy: () => void): Cmd[] {
       run: () => void navigate(`${homePrefix}/uses`),
     },
     {
+      id: 'act-codi',
+      group: s.actions,
+      label: lang === 'es' ? 'hablar con Codi' : 'chat with Codi',
+      kbd: 'ctrl ;',
+      keywords: 'codi chat asistente assistant ia ai',
+      run: () => {
+        window.dispatchEvent(new CustomEvent('mk:codi-open'));
+      },
+    },
+    {
       id: 'act-lang',
       group: s.actions,
       label: lang === 'es' ? 'switch to English' : 'cambiar a español',
