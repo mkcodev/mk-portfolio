@@ -1,6 +1,7 @@
 ---
 import { execSync } from 'node:child_process';
 import { SITE, type Lang } from '../data/site';
+import { services } from '../data/services';
 import { useTranslations } from '../i18n/ui';
 import CommentaryToggle from './CommentaryToggle.astro';
 
@@ -27,6 +28,70 @@ try {
       mkcodev<span class="footer-wordmark-cursor">_</span>
     </p>
   </div>
+  {
+    lang === 'es' && (
+      <nav class="container-site footer-nav" aria-label="secundaria">
+        <div class="footer-nav-col">
+          <p class="footer-nav-title">
+            <span aria-hidden="true">$</span> ls servicios/
+          </p>
+          <ul class="footer-nav-list">
+            {services.map((service) => (
+              <li>
+                <a href={`/servicios/${service.slug}`}>{service.shortTitle}</a>
+              </li>
+            ))}
+            <li>
+              <a href="/servicios">todos los servicios →</a>
+            </li>
+          </ul>
+        </div>
+        <div class="footer-nav-col">
+          <p class="footer-nav-title">
+            <span aria-hidden="true">$</span> ls zonas/
+          </p>
+          <ul class="footer-nav-list">
+            <li>
+              <a href="/diseno-web-bilbao">diseño web en Bilbao</a>
+            </li>
+            <li>
+              <a href="/diseno-web-zamora">diseño web en Zamora</a>
+            </li>
+            <li>
+              <a href="/blog">blog</a>
+            </li>
+          </ul>
+        </div>
+        <div class="footer-nav-col">
+          <p class="footer-nav-title">
+            <span aria-hidden="true">$</span> cat legal.md
+          </p>
+          <ul class="footer-nav-list">
+            <li>
+              <a href="/aviso-legal">aviso legal</a>
+            </li>
+            <li>
+              <a href="/privacidad">privacidad</a>
+            </li>
+            <li>
+              <a href="/cookies">cookies</a>
+            </li>
+          </ul>
+        </div>
+        <div class="footer-nav-col">
+          <p class="footer-nav-title">
+            <span aria-hidden="true">$</span> cat contacto.md
+          </p>
+          <address class="footer-nap">
+            <span>{SITE.author}</span>
+            <a href={`tel:${SITE.phone}`}>{SITE.phoneDisplay}</a>
+            <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
+            <span>Basauri · Bilbao · Zamora</span>
+          </address>
+        </div>
+      </nav>
+    )
+  }
   <div class="container-site footer-grid">
     <div class="footer-col">
       <p class="footer-brand">mkcodev<span class="footer-cursor" aria-hidden="true">_</span></p>
@@ -88,6 +153,69 @@ try {
     color: var(--color-accent);
     animation: blink 1.1s steps(1) infinite;
   }
+  .footer-nav {
+    display: grid;
+    gap: 2rem;
+    padding-bottom: 2.5rem;
+    margin-bottom: 2.5rem;
+    border-bottom: 1px solid var(--color-border-soft);
+  }
+  @media (min-width: 700px) {
+    .footer-nav {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 1000px) {
+    .footer-nav {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  .footer-nav-title {
+    margin: 0 0 0.75rem;
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-white);
+  }
+  .footer-nav-title span {
+    color: var(--color-accent);
+  }
+  .footer-nav-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.4rem;
+  }
+  .footer-nav-list a {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-muted);
+    text-decoration: none;
+    transition: color var(--duration-hover) ease;
+  }
+  .footer-nav-list a:hover,
+  .footer-nav-list a:focus-visible {
+    color: var(--color-accent);
+  }
+  .footer-nap {
+    display: grid;
+    gap: 0.4rem;
+    font-style: normal;
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-muted);
+  }
+  .footer-nap a {
+    color: var(--color-muted);
+    text-decoration: none;
+    transition: color var(--duration-hover) ease;
+  }
+  .footer-nap a:hover,
+  .footer-nap a:focus-visible {
+    color: var(--color-accent);
+  }
+
   .footer-grid {
     display: grid;
     gap: 1.5rem;

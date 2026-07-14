@@ -102,6 +102,41 @@ function buildCommands(lang: Lang, onCopy: () => void): Cmd[] {
       keywords: 'setup tools herramientas',
       run: () => void navigate(`${homePrefix}/uses`),
     },
+    // Páginas comerciales esOnly: navegación absoluta, solo en ES
+    ...(lang === 'es'
+      ? [
+          {
+            id: 'page-servicios',
+            group: s.pages,
+            label: '~/servicios',
+            kbd: 'g s',
+            keywords: 'servicios precios web tienda online seo mantenimiento ia',
+            run: () => void navigate('/servicios'),
+          },
+          {
+            id: 'page-bilbao',
+            group: s.pages,
+            label: 'diseño web en Bilbao',
+            keywords: 'bilbao basauri bizkaia local',
+            run: () => void navigate('/diseno-web-bilbao'),
+          },
+          {
+            id: 'page-zamora',
+            group: s.pages,
+            label: 'diseño web en Zamora',
+            keywords: 'zamora kit digital benavente toro',
+            run: () => void navigate('/diseno-web-zamora'),
+          },
+        ]
+      : []),
+    {
+      id: 'page-blog',
+      group: s.pages,
+      label: '~/blog',
+      kbd: 'g b',
+      keywords: 'posts articulos articles notas',
+      run: () => void navigate(`${homePrefix}/blog`),
+    },
     {
       id: 'act-codi',
       group: s.actions,

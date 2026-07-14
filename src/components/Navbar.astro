@@ -3,6 +3,7 @@ import { Image } from 'astro:assets';
 
 import logo from '../assets/logo-mkcodev.png';
 import { SITE, type Lang } from '../data/site';
+import { services } from '../data/services';
 import { alternatePath } from '../i18n/routes';
 import { useTranslations } from '../i18n/ui';
 
@@ -17,6 +18,8 @@ const path = Astro.url.pathname.replace(/\/+$/, '') || '/';
 const langTarget = alternatePath(path);
 
 const leftLinks = [
+  // Páginas comerciales solo en ES (esOnly) — el navbar EN no las enlaza
+  ...(lang === 'es' ? [{ href: '/servicios', label: t('nav.services'), kbd: 'g s' }] : []),
   { href: `${home}#proyectos`, label: t('nav.projects'), kbd: 'g p' },
   { href: `${home}#como-trabajo`, label: t('nav.how'), kbd: 'g w' },
   { href: `${home}#trayectoria`, label: t('nav.timeline'), kbd: 'g t' },
@@ -112,7 +115,7 @@ const ctaLabel = lang === 'es' ? 'open to work' : 'open to work';
 
   <div class="mega-menu-backdrop" data-mega-backdrop aria-hidden="true"></div>
   <div class="mega-menu glass" id="mega-menu" data-mega-menu hidden>
-    <div class="container-site mega-menu-grid">
+    <div class:list={['container-site', 'mega-menu-grid', { 'has-services': lang === 'es' }]}>
       <ul class="mega-menu-links">
         {
           allLinks.map((link, i) => (
@@ -125,6 +128,43 @@ const ctaLabel = lang === 'es' ? 'open to work' : 'open to work';
           ))
         }
       </ul>
+      {
+        lang === 'es' && (
+          <div class="mega-menu-services">
+            <p class="mega-menu-services-title">
+              <a href="/servicios" data-menu-close>
+                <span aria-hidden="true">$</span> ls servicios/
+              </a>
+            </p>
+            <ul class="mega-menu-services-list">
+              {services.map((service) => (
+                <li>
+                  <a href={`/servicios/${service.slug}`} data-menu-close>
+                    {service.shortTitle}
+                  </a>
+                </li>
+              ))}
+            </ul>
+            <ul class="mega-menu-services-list mega-menu-services-extra">
+              <li>
+                <a href="/diseno-web-bilbao" data-menu-close>
+                  diseño web bilbao
+                </a>
+              </li>
+              <li>
+                <a href="/diseno-web-zamora" data-menu-close>
+                  diseño web zamora
+                </a>
+              </li>
+              <li>
+                <a href="/blog" data-menu-close>
+                  blog
+                </a>
+              </li>
+            </ul>
+          </div>
+        )
+      }
       <div class="mega-menu-aside">
         <p class="mega-menu-badge">
           <span class="badge-dot" aria-hidden="true"></span>
@@ -542,6 +582,55 @@ const ctaLabel = lang === 'es' ? 'open to work' : 'open to work';
       gap: 4rem;
       padding-block: 2.5rem;
     }
+    .mega-menu-grid.has-services {
+      grid-template-columns: 1fr auto auto;
+    }
+  }
+
+  .mega-menu-services {
+    display: grid;
+    align-content: start;
+    gap: 0.75rem;
+  }
+  .mega-menu-services-title {
+    margin: 0;
+  }
+  .mega-menu-services-title a {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-white);
+    text-decoration: none;
+    transition: color var(--duration-hover) ease;
+  }
+  .mega-menu-services-title a:hover,
+  .mega-menu-services-title a:focus-visible {
+    color: var(--color-accent);
+  }
+  .mega-menu-services-title span {
+    color: var(--color-accent);
+  }
+  .mega-menu-services-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.4rem;
+  }
+  .mega-menu-services-list a {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-muted);
+    text-decoration: none;
+    transition: color var(--duration-hover) ease;
+  }
+  .mega-menu-services-list a:hover,
+  .mega-menu-services-list a:focus-visible {
+    color: var(--color-accent);
+  }
+  .mega-menu-services-extra {
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--color-border-soft);
   }
   .mega-menu-links {
     list-style: none;

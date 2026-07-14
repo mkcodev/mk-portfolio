@@ -2,6 +2,8 @@ import type { Lang } from '../data/site';
 
 export const ui = {
   es: {
+    'nav.services': 'servicios',
+    'nav.blog': 'blog',
     'nav.projects': 'proyectos',
     'nav.how': 'cómo trabajo',
     'nav.timeline': 'trayectoria',
@@ -42,6 +44,8 @@ export const ui = {
       'Full Stack Developer en Bilbao. React, Next.js, Astro y TypeScript con SEO técnico y Core Web Vitals. Del diseño en Figma al deploy.',
   },
   en: {
+    'nav.services': 'services',
+    'nav.blog': 'blog',
     'nav.projects': 'projects',
     'nav.how': 'how I work',
     'nav.timeline': 'timeline',

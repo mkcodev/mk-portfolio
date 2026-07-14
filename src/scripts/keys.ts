@@ -1,4 +1,5 @@
 import { navigate } from 'astro:transitions/client';
+import { isEsOnly } from '../i18n/routes';
 import { lenis, scrollToTarget } from './scroll';
 
 const SEQ_TIMEOUT = 900;
@@ -12,6 +13,8 @@ const GO: Record<string, string> = {
   a: '#sobre-mi',
   c: '#contacto',
   u: '/uses',
+  s: '/servicios',
+  b: '/blog',
   h: '/',
 };
 
@@ -36,6 +39,11 @@ function goTo(dest: string): void {
     const current = window.location.pathname.replace(/\/+$/, '') || '/';
     if (current === home) scrollToTarget(dest);
     else void navigate(home === '/' ? `/${dest}` : `${home}${dest}`);
+    return;
+  }
+  // Rutas ES-only (servicios, ubicaciones…): sin par EN, navegar absoluto
+  if (isEsOnly(dest)) {
+    void navigate(dest);
     return;
   }
   void navigate(home === '/' ? dest : `/en${dest === '/' ? '' : dest}`);
