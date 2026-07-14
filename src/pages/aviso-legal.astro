@@ -1,0 +1,70 @@
+---
+import Base from '../layouts/Base.astro';
+import LegalContent from '../components/LegalContent.astro';
+import { SITE, SITE_URL } from '../data/site';
+import { webPageNode, breadcrumbList } from '../data/schema';
+
+const lang = 'es' as const;
+const url = `${SITE_URL}/aviso-legal`;
+const title = 'Aviso legal — mkcodev';
+const description =
+  'Aviso legal de mkcodev.com: datos identificativos del titular, condiciones de uso y propiedad intelectual.';
+
+const schema = [
+  webPageNode({ url, title, description, lang }),
+  breadcrumbList([
+    { name: 'Inicio', url: SITE_URL },
+    { name: 'Aviso legal', url },
+  ]),
+];
+---
+
+<Base lang={lang} title={title} description={description} schema={schema}>
+  <LegalContent marker="~/aviso-legal" h1="Aviso legal" updated="14 de julio de 2026">
+    <h2>Titular del sitio</h2>
+    <p>
+      En cumplimiento de la Ley 34/2002, de Servicios de la Sociedad de la Información y de Comercio
+      Electrónico (LSSI-CE), se informa de que el titular de este sitio web es:
+    </p>
+    <ul>
+      <li><strong>Titular</strong>: {SITE.author}</li>
+      <li><strong>Actividad</strong>: desarrollo web y servicios digitales (freelance)</li>
+      <li><strong>Domicilio</strong>: {SITE.addressLocality}, {SITE.addressRegion} (España)</li>
+      <li>
+        <strong>Email</strong>: <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
+      </li>
+      <li>
+        <strong>Teléfono</strong>: <a href={`tel:${SITE.phone}`}>{SITE.phoneDisplay}</a>
+      </li>
+    </ul>
+
+    <h2>Condiciones de uso</h2>
+    <p>
+      El acceso a este sitio web es libre y gratuito. El uso del sitio implica la aceptación de
+      estas condiciones. El titular se reserva el derecho a modificar el contenido del sitio sin
+      previo aviso.
+    </p>
+
+    <h2>Propiedad intelectual</h2>
+    <p>
+      El diseño, el código y los contenidos de este sitio son propiedad de {SITE.author}, salvo
+      indicación expresa. Las marcas y logotipos de terceros mostrados en la sección de proyectos
+      pertenecen a sus respectivos titulares. No se permite la reproducción del contenido sin
+      autorización.
+    </p>
+
+    <h2>Responsabilidad</h2>
+    <p>
+      El titular no se hace responsable del uso indebido del contenido del sitio ni de la
+      información de sitios de terceros enlazados desde estas páginas. Los precios publicados en la
+      sección de <a href="/servicios">servicios</a> son orientativos: todo trabajo se presupuesta por
+      escrito antes de empezar.
+    </p>
+
+    <h2>Legislación aplicable</h2>
+    <p>
+      Estas condiciones se rigen por la legislación española. Para cualquier controversia serán
+      competentes los juzgados y tribunales del domicilio del titular.
+    </p>
+  </LegalContent>
+</Base>

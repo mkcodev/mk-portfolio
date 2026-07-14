@@ -1,0 +1,108 @@
+---
+interface Props {
+  marker: string;
+  h1: string;
+  updated: string;
+}
+const { marker, h1, updated } = Astro.props;
+---
+
+<article class="container-site legal-page">
+  <header class="legal-header" data-reveal-group>
+    <p class="legal-marker" data-reveal>{marker}</p>
+    <h1 class="legal-title" data-reveal>{h1}</h1>
+    <p class="legal-updated" data-reveal>última actualización: {updated}</p>
+  </header>
+  <div class="legal-prose">
+    <slot />
+  </div>
+</article>
+
+<style>
+  .legal-page {
+    padding-block: clamp(7rem, 14vw, 10rem) 0;
+  }
+  .legal-marker {
+    margin: 0 0 0.75rem;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-accent);
+  }
+  .legal-title {
+    margin: 0;
+    max-width: 800px;
+    font-size: var(--text-h2);
+    font-weight: 700;
+    letter-spacing: var(--text-h2--letter-spacing);
+    line-height: var(--text-h2--line-height);
+    color: var(--color-white);
+  }
+  .legal-updated {
+    margin: 1rem 0 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-muted);
+  }
+
+  .legal-prose {
+    margin-top: clamp(2.5rem, 5vw, 3.5rem);
+    max-width: 680px;
+    font-size: var(--text-body);
+    line-height: 1.75;
+    color: var(--color-text);
+  }
+  .legal-prose :global(h2) {
+    margin: 2.5rem 0 1rem;
+    font-size: var(--text-h3);
+    font-weight: 700;
+    letter-spacing: var(--text-h3--letter-spacing);
+    color: var(--color-white);
+  }
+  .legal-prose :global(p) {
+    margin: 0 0 1.25rem;
+  }
+  .legal-prose :global(ul) {
+    margin: 0 0 1.25rem;
+    padding-left: 1.5rem;
+  }
+  .legal-prose :global(li) {
+    margin-bottom: 0.5rem;
+  }
+  .legal-prose :global(li::marker) {
+    color: var(--color-accent);
+  }
+  .legal-prose :global(a) {
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: color var(--duration-hover) ease;
+  }
+  .legal-prose :global(a:hover),
+  .legal-prose :global(a:focus-visible) {
+    color: var(--color-white);
+  }
+  .legal-prose :global(strong) {
+    color: var(--color-white);
+  }
+  .legal-prose :global(table) {
+    width: 100%;
+    margin: 0 0 1.25rem;
+    border-collapse: collapse;
+    font-size: var(--text-sm);
+  }
+  .legal-prose :global(th),
+  .legal-prose :global(td) {
+    padding: 0.625rem 0.875rem;
+    text-align: left;
+    border: 1px solid var(--color-border-soft);
+  }
+  .legal-prose :global(th) {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-muted);
+    background: var(--color-surface);
+  }
+</style>

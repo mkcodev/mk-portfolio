@@ -1,0 +1,69 @@
+---
+import Base from '../layouts/Base.astro';
+import LegalContent from '../components/LegalContent.astro';
+import { SITE, SITE_URL } from '../data/site';
+import { webPageNode, breadcrumbList } from '../data/schema';
+
+const lang = 'es' as const;
+const url = `${SITE_URL}/privacidad`;
+const title = 'Política de privacidad — mkcodev';
+const description =
+  'Política de privacidad de mkcodev.com: qué datos se recogen, con qué finalidad, base legal y cómo ejercer tus derechos.';
+
+const schema = [
+  webPageNode({ url, title, description, lang }),
+  breadcrumbList([
+    { name: 'Inicio', url: SITE_URL },
+    { name: 'Política de privacidad', url },
+  ]),
+];
+---
+
+<Base lang={lang} title={title} description={description} schema={schema}>
+  <LegalContent marker="~/privacidad" h1="Política de privacidad" updated="14 de julio de 2026">
+    <h2>Responsable del tratamiento</h2>
+    <p>
+      El responsable del tratamiento de los datos recogidos en este sitio es {SITE.author}, con
+      domicilio en {SITE.addressLocality}, {SITE.addressRegion} (España). Contacto:
+      <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.
+    </p>
+
+    <h2>Qué datos se recogen y para qué</h2>
+    <ul>
+      <li>
+        <strong>Formulario y email de contacto</strong>: nombre, email y el contenido del mensaje.
+        Finalidad: responder a tu consulta y, si procede, preparar un presupuesto. Base legal:
+        consentimiento del interesado y medidas precontractuales (art. 6.1.a y 6.1.b RGPD).
+      </li>
+      <li>
+        <strong>Analítica web (Google Analytics 4)</strong>: datos de navegación agregados (páginas
+        vistas, dispositivo, origen de la visita). Solo se activa si aceptas las cookies de
+        analítica. Base legal: consentimiento (art. 6.1.a RGPD).
+      </li>
+    </ul>
+
+    <h2>Conservación de los datos</h2>
+    <p>
+      Los datos de contacto se conservan el tiempo necesario para gestionar la consulta o la
+      relación comercial que derive de ella. Los datos de analítica se conservan según los plazos
+      configurados en Google Analytics (máximo 14 meses).
+    </p>
+
+    <h2>Destinatarios</h2>
+    <p>
+      No se ceden datos a terceros salvo obligación legal. Los proveedores tecnológicos que tratan
+      datos por cuenta del responsable son Vercel (hosting) y Google (analítica, solo con tu
+      consentimiento), ambos con garantías adecuadas para transferencias internacionales.
+    </p>
+
+    <h2>Tus derechos</h2>
+    <p>
+      Puedes ejercer los derechos de acceso, rectificación, supresión, oposición, limitación y
+      portabilidad escribiendo a <a href={`mailto:${SITE.email}`}>{SITE.email}</a>. Si consideras
+      que el tratamiento no se ajusta a la normativa, puedes reclamar ante la
+      <a href="https://www.aepd.es" rel="noopener" target="_blank"
+        >Agencia Española de Protección de Datos</a
+      >.
+    </p>
+  </LegalContent>
+</Base>

@@ -1,0 +1,77 @@
+---
+import Base from '../layouts/Base.astro';
+import LegalContent from '../components/LegalContent.astro';
+import { SITE_URL } from '../data/site';
+import { webPageNode, breadcrumbList } from '../data/schema';
+
+const lang = 'es' as const;
+const url = `${SITE_URL}/cookies`;
+const title = 'Política de cookies — mkcodev';
+const description =
+  'Política de cookies de mkcodev.com: qué cookies se usan, cuáles requieren consentimiento y cómo cambiar tu decisión.';
+
+const schema = [
+  webPageNode({ url, title, description, lang }),
+  breadcrumbList([
+    { name: 'Inicio', url: SITE_URL },
+    { name: 'Política de cookies', url },
+  ]),
+];
+---
+
+<Base lang={lang} title={title} description={description} schema={schema}>
+  <LegalContent marker="~/cookies" h1="Política de cookies" updated="14 de julio de 2026">
+    <h2>Qué cookies usa este sitio</h2>
+    <p>
+      Este sitio no usa cookies de publicidad ni de seguimiento de terceros. Solo hay dos tipos de
+      almacenamiento:
+    </p>
+    <table>
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Tipo</th>
+          <th>Finalidad</th>
+          <th>Duración</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>mk-consent</td>
+          <td>localStorage (técnica)</td>
+          <td>Recordar tu decisión sobre las cookies</td>
+          <td>Hasta que la borres</td>
+        </tr>
+        <tr>
+          <td>_ga, _ga_*</td>
+          <td>Analítica (Google Analytics 4)</td>
+          <td>Estadísticas de uso agregadas</td>
+          <td>Hasta 13 meses</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>
+      Las cookies de analítica <strong>solo se instalan si las aceptas</strong> en el aviso de cookies.
+      Si las rechazas, Google Analytics no se carga: ni script, ni cookies, ni datos.
+    </p>
+
+    <h2>Cómo cambiar tu decisión</h2>
+    <ul>
+      <li>
+        Para retirar el consentimiento: borra los datos de este sitio desde tu navegador
+        (configuración → privacidad → datos de sitios) y recarga la página. El aviso volverá a
+        aparecer.
+      </li>
+      <li>
+        También puedes eliminar las cookies <strong>_ga</strong> existentes desde el mismo panel del navegador
+        en cualquier momento.
+      </li>
+    </ul>
+
+    <h2>Más información</h2>
+    <p>
+      El detalle de qué datos se tratan y con qué base legal está en la
+      <a href="/privacidad">política de privacidad</a>.
+    </p>
+  </LegalContent>
+</Base>

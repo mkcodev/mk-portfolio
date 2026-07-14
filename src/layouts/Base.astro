@@ -12,6 +12,7 @@ import { hreflangPair, isEsOnly } from '../i18n/routes';
 import { useTranslations } from '../i18n/ui';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
+import CookieBanner from '../components/CookieBanner.astro';
 import ShortcutsOverlay from '../components/ShortcutsOverlay.astro';
 import CommandPalette from '../components/islands/CommandPalette.tsx';
 import CodiChat from '../components/islands/codi/CodiChat.tsx';
@@ -91,6 +92,22 @@ const jsonLd = {
     <meta name="twitter:image" content={ogImageAbs} />
 
     <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+    <!-- Consent Mode v2 default: todo denegado hasta que el usuario acepte.
+         gtag.js se inyecta desde consent.ts SOLO tras el consentimiento. -->
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        window.dataLayer.push(arguments);
+      }
+      window.gtag = gtag;
+      gtag('consent', 'default', {
+        analytics_storage: 'denied',
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+      });
+    </script>
     <ClientRouter />
   </head>
   <body>
@@ -103,6 +120,7 @@ const jsonLd = {
       <slot />
     </main>
     <Footer lang={lang} />
+    <CookieBanner lang={lang} />
     <ShortcutsOverlay lang={lang} />
     <CommandPalette client:idle lang={lang} transition:persist="cmdk" />
     <div data-codi-orb transition:persist="codi-orb" class="codi-orb-wrapper"></div>
