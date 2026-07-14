@@ -1,53 +1,18 @@
-/* -------- Orb -------- */
-.codi-orb-wrapper {
-  position: fixed;
-  bottom: 1.5rem;
-  right: 1.5rem;
-  z-index: var(--z-codi);
-  cursor: pointer;
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  user-select: none;
-  -webkit-user-select: none;
-}
-.codi-orb-wrapper:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: 3px;
-}
-.codi-orb-canvas {
-  border-radius: 50%;
-  display: block;
-  box-shadow: var(--shadow-glow-orb);
-}
-.codi-orb-ring {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  border: 2px solid var(--color-accent);
-  pointer-events: none;
-}
-.codi-orb--docked .codi-orb-canvas {
-  opacity: 0.35;
-}
-
-@media (max-width: 767px) {
-  .codi-orb-wrapper {
-    bottom: 1.25rem;
-    right: 1.25rem;
-  }
-}
-
-/* -------- Backdrop (mobile only) -------- */
+/* -------- Backdrop -------- */
 .codi-backdrop {
   position: fixed;
   inset: 0;
-  background: rgb(10 15 15 / 0.6);
+  background: rgb(4 8 8 / 0.55);
   z-index: calc(var(--z-codi) - 1);
 }
-@media (min-width: 768px) {
+@supports (backdrop-filter: blur(1px)) {
   .codi-backdrop {
-    display: none;
+    backdrop-filter: blur(6px) saturate(0.9);
+  }
+}
+@supports (-webkit-backdrop-filter: blur(1px)) {
+  .codi-backdrop {
+    -webkit-backdrop-filter: blur(6px) saturate(0.9);
   }
 }
 

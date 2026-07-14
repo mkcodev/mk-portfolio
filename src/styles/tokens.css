@@ -64,7 +64,7 @@
   --shadow-glow-orb: 0 0 32px rgb(0 219 213 / 0.45), 0 0 80px rgb(0 219 213 / 0.18);
   --shadow-glow-ambient: 0 0 120px 24px rgb(0 219 213 / 0.07);
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
-  --z-codi: 90;
+  --z-codi: 110;
 }
 
 /* Fallbacks con métricas ajustadas — protegen marca Y CLS con font-display: swap.

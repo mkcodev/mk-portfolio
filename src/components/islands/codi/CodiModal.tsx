@@ -8,7 +8,6 @@ import type { Lang } from '../../../data/site';
 import MessageList from './MessageList';
 import QuickReplies from './QuickReplies';
 import Composer from './Composer';
-import './CodiChat.css';
 
 interface Props {
   lang: Lang;
@@ -159,10 +158,9 @@ export default function CodiModal({ lang, open, onClose }: Props) {
       dispatch({ type: 'SET_ERROR', error: null });
 
       const messageId = crypto.randomUUID();
-      const historySnapshot = state.persist.messages.map((m) => ({
-        role: m.role,
-        text: m.text,
-      }));
+      const historySnapshot = state.persist.messages
+        .filter((m) => !m.error && m.text.trim().length > 0)
+        .map((m) => ({ role: m.role, text: m.text }));
       const history: Array<{ role: 'user' | 'codi'; text: string }> = [
         ...historySnapshot,
         { role: 'user', text },

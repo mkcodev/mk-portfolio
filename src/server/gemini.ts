@@ -1,7 +1,7 @@
 import type { GeminiMessage } from './prompt';
 
 const GEMINI_API_KEY = import.meta.env.GEMINI_API_KEY as string | undefined;
-const MODEL = 'gemini-2.0-flash';
+const MODEL = 'gemini-3.1-flash-lite-preview';
 const BASE_URL = 'https://generativelanguage.googleapis.com/v1beta';
 
 export interface GeminiStreamParams {

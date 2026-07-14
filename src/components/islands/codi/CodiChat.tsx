@@ -1,5 +1,6 @@
 import { useEffect, useState, lazy, Suspense, useCallback } from 'react';
 import type { Lang } from '../../../data/site';
+import './CodiChat.css';
 
 const CodiModal = lazy(() => import('./CodiModal'));
 
